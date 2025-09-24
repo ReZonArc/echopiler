@@ -4,6 +4,16 @@ This is a how-to guide for the user-interface presented by [Compiler Explorer](h
 the details of how to set up or modify Compiler Explorer for your own needs. For that, please check the documents which
 already cover topics like:
 
+## Core Documentation
+
+- [Technical Architecture](TechnicalArchitecture.md) - Comprehensive system architecture with mermaid diagrams
+- [Data Flow Architecture](DataFlowArchitecture.md) - Request processing, caching, and communication patterns
+- [What is Compiler Explorer](WhatIsCompilerExplorer.md) - User-facing overview and introduction
+- [Configuration System](Configuration.md) - Detailed configuration documentation
+- [API Documentation](API.md) - REST API specification
+
+## Development Guides
+
 - [Adding a language](AddingALanguage.md)
 - [Adding a compiler](AddingACompiler.md)
 - [Adding a library](AddingALibrary.md)
