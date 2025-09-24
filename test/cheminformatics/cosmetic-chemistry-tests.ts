@@ -88,32 +88,30 @@ describe('Cosmetic Chemistry Framework', () => {
                 type: 'SKINCARE_FORMULATION',
                 ingredients: [
                     {
-                        ingredient: {
-                            id: 'ha_001',
-                            name: 'hyaluronic_acid',
-                            inci_name: 'Sodium Hyaluronate',
-                            category: 'HUMECTANT',
-                            functions: ['moisturizing'],
-                            solubility: 'water_soluble',
-                            allergenicity: 'very_low'
-                        },
-                        concentration: 1.0,
-                        function_in_formula: ['primary_humectant']
+                        id: 'ha_001',
+                        name: 'hyaluronic_acid',
+                        inci_name: 'Sodium Hyaluronate',
+                        category: 'HUMECTANT',
+                        functions: ['moisturizing'],
+                        solubility: 'water_soluble',
+                        allergenicity: 'very_low'
                     },
                     {
-                        ingredient: {
-                            id: 'gly_001',
-                            name: 'glycerin',
-                            inci_name: 'Glycerin',
-                            category: 'HUMECTANT',
-                            functions: ['moisturizing'],
-                            solubility: 'water_soluble',
-                            allergenicity: 'very_low'
-                        },
-                        concentration: 5.0,
-                        function_in_formula: ['secondary_humectant']
+                        id: 'gly_001',
+                        name: 'glycerin',
+                        inci_name: 'Glycerin',
+                        category: 'HUMECTANT',
+                        functions: ['moisturizing'],
+                        solubility: 'water_soluble',
+                        allergenicity: 'very_low'
                     }
                 ],
+                concentrations: new Map([
+                    ['ha_001', 1.0],
+                    ['gly_001', 5.0]
+                ]),
+                total_cost: 15.50,
+                ph_target: 5.5,
                 target_properties: [
                     { name: 'hydration', value: 'high', unit: 'subjective' },
                     { name: 'texture', value: 'lightweight', unit: 'subjective' }
@@ -122,13 +120,18 @@ describe('Cosmetic Chemistry Framework', () => {
                     { name: 'pH', value: 5.5, type: 'PH_PROPERTY', unit: 'pH units' },
                     { name: 'viscosity', value: 'medium', type: 'VISCOSITY_PROPERTY' }
                 ],
-                target_ph: 5.5
+                regulatory_approvals: new Map([
+                    ['EU', 'approved'],
+                    ['FDA', 'approved']
+                ]),
+                creation_date: new Date(),
+                last_modified: new Date()
             };
 
             expect(moisturizer.type).toBe('SKINCARE_FORMULATION');
             expect(moisturizer.ingredients).toHaveLength(2);
-            expect(moisturizer.target_ph).toBe(5.5);
-            expect(moisturizer.ingredients[0].concentration).toBe(1.0);
+            expect(moisturizer.ph_target).toBe(5.5);
+            expect(moisturizer.concentrations.get('ha_001')).toBe(1.0);
         });
     });
 
@@ -233,8 +236,14 @@ describe('Cosmetic Chemistry Framework', () => {
                     name: 'Test Formulation',
                     type: 'SKINCARE_FORMULATION',
                     ingredients: [],
+                    concentrations: new Map(),
+                    total_cost: 12.50,
+                    ph_target: 5.5,
                     target_properties: [],
-                    physical_properties: []
+                    physical_properties: [],
+                    regulatory_approvals: new Map([['EU', 'approved']]),
+                    creation_date: new Date(),
+                    last_modified: new Date()
                 },
                 compatibility_matrix: {
                     ingredients: ['ha_001', 'nia_001'],
