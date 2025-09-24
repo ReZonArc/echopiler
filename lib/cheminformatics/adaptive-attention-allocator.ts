@@ -1,12 +1,12 @@
 /**
  * Adaptive Attention Allocation for Cosmeceutical Formulation Optimization
- * 
+ *
  * This module implements an attention allocation system inspired by OpenCog's ECAN
  * (Economic Attention Networks) for efficiently managing computational resources
  * during cosmeceutical formulation optimization. The system dynamically allocates
  * attention to promising ingredient combinations, regulatory constraints, and
  * market opportunities.
- * 
+ *
  * Key Features:
  * - Short-term Importance (STI) for immediate formulation needs
  * - Long-term Importance (LTI) for strategic ingredient development
@@ -22,7 +22,7 @@ export interface AttentionAtom {
     type: 'ingredient' | 'combination' | 'formulation' | 'constraint' | 'market_opportunity';
     content: any; // The actual ingredient, combination, etc.
     short_term_importance: number; // STI: 0-1000
-    long_term_importance: number;  // LTI: 0-1000
+    long_term_importance: number; // LTI: 0-1000
     very_long_term_importance: number; // VLTI: 0-1000
     attention_value: number; // AV: computed from STI and LTI
     last_accessed: Date;
@@ -81,7 +81,7 @@ export class AdaptiveAttentionAllocator {
         this.marketOpportunities = new Map();
         this.regulatoryPriorities = new Map();
         this.computationHistory = new Map();
-        
+
         this.config = {
             max_attention_atoms: 1000,
             sti_decay_rate: 0.1,
@@ -93,7 +93,7 @@ export class AdaptiveAttentionAllocator {
             cost_penalty_factor: 0.2,
             market_weight: 0.3,
             regulatory_weight: 0.4,
-            ...config
+            ...config,
         };
 
         this.initializeMarketOpportunities();
@@ -114,7 +114,7 @@ export class AdaptiveAttentionAllocator {
                 competitive_landscape: 'emerging',
                 regulatory_barriers: ['biodegradability_certification', 'packaging_directives'],
                 time_to_market: 18, // months
-                confidence_level: 0.8
+                confidence_level: 0.8,
             },
             {
                 id: 'personalized_skincare',
@@ -125,7 +125,7 @@ export class AdaptiveAttentionAllocator {
                 competitive_landscape: 'competitive',
                 regulatory_barriers: ['personalized_medicine_regulations', 'data_privacy'],
                 time_to_market: 24, // months
-                confidence_level: 0.7
+                confidence_level: 0.7,
             },
             {
                 id: 'microbiome_beauty',
@@ -136,7 +136,7 @@ export class AdaptiveAttentionAllocator {
                 competitive_landscape: 'early_stage',
                 regulatory_barriers: ['probiotic_regulations', 'safety_assessments'],
                 time_to_market: 30, // months
-                confidence_level: 0.6
+                confidence_level: 0.6,
             },
             {
                 id: 'clean_beauty',
@@ -147,8 +147,8 @@ export class AdaptiveAttentionAllocator {
                 competitive_landscape: 'saturated',
                 regulatory_barriers: ['natural_certification', 'ingredient_restrictions'],
                 time_to_market: 12, // months
-                confidence_level: 0.9
-            }
+                confidence_level: 0.9,
+            },
         ];
 
         opportunities.forEach(opp => {
@@ -193,7 +193,7 @@ export class AdaptiveAttentionAllocator {
             cost: atom.cost || 1.0,
             market_relevance: atom.market_relevance || 0.5,
             regulatory_risk: atom.regulatory_risk || 0.5,
-            ...atom
+            ...atom,
         };
 
         newAtom.attention_value = this.computeAttentionValue(newAtom);
@@ -213,16 +213,15 @@ export class AdaptiveAttentionAllocator {
         const marketFactor = atom.market_relevance * this.config.market_weight;
         const regulatoryFactor = (1 - atom.regulatory_risk) * this.config.regulatory_weight;
         const costPenalty = atom.cost * this.config.cost_penalty_factor;
-        
-        const baseAV = (atom.short_term_importance * timeFactors.sti_factor +
-                       atom.long_term_importance * timeFactors.lti_factor +
-                       atom.very_long_term_importance * timeFactors.vlti_factor) / 3;
 
-        const adjustedAV = baseAV * 
-                          (1 + marketFactor + regulatoryFactor) * 
-                          atom.confidence * 
-                          atom.utility * 
-                          (1 - costPenalty);
+        const baseAV =
+            (atom.short_term_importance * timeFactors.sti_factor +
+                atom.long_term_importance * timeFactors.lti_factor +
+                atom.very_long_term_importance * timeFactors.vlti_factor) /
+            3;
+
+        const adjustedAV =
+            baseAV * (1 + marketFactor + regulatoryFactor) * atom.confidence * atom.utility * (1 - costPenalty);
 
         return Math.max(0, Math.min(1000, adjustedAV));
     }
@@ -248,7 +247,7 @@ export class AdaptiveAttentionAllocator {
     public updateAttentionDecay(): void {
         this.attentionSpace.forEach((atom, id) => {
             atom.attention_value = this.computeAttentionValue(atom);
-            
+
             // Remove atoms below attention threshold
             if (atom.attention_value < this.config.attention_threshold) {
                 this.attentionSpace.delete(id);
@@ -267,29 +266,27 @@ export class AdaptiveAttentionAllocator {
         if (!this.computationHistory.has(atomId)) {
             this.computationHistory.set(atomId, []);
         }
-        
+
         this.computationHistory.get(atomId)!.push({
             success,
             cost: computationCost,
-            time: new Date()
+            time: new Date(),
         });
 
         // Update importance values based on success
         if (success) {
-            atom.short_term_importance = Math.min(1000, 
-                atom.short_term_importance * this.config.reinforcement_factor);
+            atom.short_term_importance = Math.min(1000, atom.short_term_importance * this.config.reinforcement_factor);
             atom.confidence = Math.min(1.0, atom.confidence * 1.1);
             atom.utility = Math.min(1.0, atom.utility * 1.05);
         } else {
-            atom.short_term_importance = Math.max(1, 
-                atom.short_term_importance * 0.8);
+            atom.short_term_importance = Math.max(1, atom.short_term_importance * 0.8);
             atom.confidence = Math.max(0.1, atom.confidence * 0.95);
         }
 
         // Update access information
         atom.last_accessed = new Date();
         atom.access_count++;
-        
+
         // Recompute attention value
         atom.attention_value = this.computeAttentionValue(atom);
     }
@@ -300,24 +297,25 @@ export class AdaptiveAttentionAllocator {
     public allocateAttention(): AttentionDistribution {
         this.updateAttentionDecay();
 
-        const sortedAtoms = Array.from(this.attentionSpace.values())
-            .sort((a, b) => b.attention_value - a.attention_value);
+        const sortedAtoms = Array.from(this.attentionSpace.values()).sort(
+            (a, b) => b.attention_value - a.attention_value,
+        );
 
         const totalAttention = sortedAtoms.reduce((sum, atom) => sum + atom.attention_value, 0);
-        
+
         // Categorize atoms by attention level
         const highThreshold = totalAttention * 0.1; // Top 10%
         const mediumThreshold = totalAttention * 0.3; // Next 20%
-        
+
         const high: AttentionAtom[] = [];
         const medium: AttentionAtom[] = [];
         const low: AttentionAtom[] = [];
-        
+
         let runningSum = 0;
-        
+
         sortedAtoms.forEach(atom => {
             runningSum += atom.attention_value;
-            
+
             if (runningSum <= highThreshold) {
                 high.push(atom);
             } else if (runningSum <= mediumThreshold) {
@@ -329,10 +327,10 @@ export class AdaptiveAttentionAllocator {
 
         // Identify focus areas
         const focusAreas = this.identifyFocusAreas(high);
-        
+
         // Compute resource allocation
         const resourceAllocation = this.computeResourceAllocation(high, medium, low);
-        
+
         // Select next computation targets
         const nextTargets = this.selectNextComputationTargets(high, medium);
 
@@ -342,7 +340,7 @@ export class AdaptiveAttentionAllocator {
             low_attention: low,
             focus_areas: focusAreas,
             resource_allocation: resourceAllocation,
-            next_computation_targets: nextTargets
+            next_computation_targets: nextTargets,
         };
     }
 
@@ -354,7 +352,7 @@ export class AdaptiveAttentionAllocator {
 
         highAttentionAtoms.forEach(atom => {
             let focusArea: string;
-            
+
             switch (atom.type) {
                 case 'ingredient':
                     focusArea = `ingredient_optimization`;
@@ -391,16 +389,16 @@ export class AdaptiveAttentionAllocator {
     private computeResourceAllocation(
         high: AttentionAtom[],
         medium: AttentionAtom[],
-        low: AttentionAtom[]
+        low: AttentionAtom[],
     ): Map<string, number> {
         const allocation = new Map<string, number>();
-        
+
         const totalHighAttention = high.reduce((sum, atom) => sum + atom.attention_value, 0);
         const totalMediumAttention = medium.reduce((sum, atom) => sum + atom.attention_value, 0);
         const totalLowAttention = low.reduce((sum, atom) => sum + atom.attention_value, 0);
-        
+
         const totalAttention = totalHighAttention + totalMediumAttention + totalLowAttention;
-        
+
         if (totalAttention > 0) {
             allocation.set('high_priority', (totalHighAttention / totalAttention) * 0.7); // 70% to high
             allocation.set('medium_priority', (totalMediumAttention / totalAttention) * 0.25); // 25% to medium
@@ -424,38 +422,36 @@ export class AdaptiveAttentionAllocator {
     /**
      * Select next computation targets using exploration-exploitation balance
      */
-    private selectNextComputationTargets(
-        high: AttentionAtom[],
-        medium: AttentionAtom[]
-    ): AttentionAtom[] {
+    private selectNextComputationTargets(high: AttentionAtom[], medium: AttentionAtom[]): AttentionAtom[] {
         const targets: AttentionAtom[] = [];
-        
+
         // Exploitation: Select top high-attention atoms
         const exploitationCount = Math.floor(high.length * (1 - this.config.exploration_factor));
         targets.push(...high.slice(0, exploitationCount));
-        
+
         // Exploration: Randomly select from medium attention atoms
         const explorationCount = Math.min(5, medium.length);
         const shuffledMedium = medium.sort(() => Math.random() - 0.5);
         targets.push(...shuffledMedium.slice(0, explorationCount));
 
         // Sort by computational efficiency (attention value / cost)
-        return targets.sort((a, b) => {
-            const efficiencyA = a.attention_value / a.cost;
-            const efficiencyB = b.attention_value / b.cost;
-            return efficiencyB - efficiencyA;
-        }).slice(0, 10); // Return top 10 targets
+        return targets
+            .sort((a, b) => {
+                const efficiencyA = a.attention_value / a.cost;
+                const efficiencyB = b.attention_value / b.cost;
+                return efficiencyB - efficiencyA;
+            })
+            .slice(0, 10); // Return top 10 targets
     }
 
     /**
      * Perform garbage collection on attention space
      */
     private performAttentionGarbageCollection(): void {
-        const atoms = Array.from(this.attentionSpace.values())
-            .sort((a, b) => a.attention_value - b.attention_value);
+        const atoms = Array.from(this.attentionSpace.values()).sort((a, b) => a.attention_value - b.attention_value);
 
         const removeCount = this.attentionSpace.size - this.config.max_attention_atoms;
-        
+
         for (let i = 0; i < removeCount; i++) {
             this.attentionSpace.delete(atoms[i].id);
         }
@@ -467,7 +463,7 @@ export class AdaptiveAttentionAllocator {
     public updateMarketOpportunityAttention(): void {
         this.marketOpportunities.forEach(opportunity => {
             const marketScore = this.calculateMarketOpportunityScore(opportunity);
-            
+
             // Create or update attention atom for this market opportunity
             this.addAttentionAtom({
                 id: `market_${opportunity.id}`,
@@ -480,7 +476,7 @@ export class AdaptiveAttentionAllocator {
                 utility: this.calculateMarketUtility(opportunity),
                 cost: opportunity.time_to_market / 12, // Normalize to years
                 market_relevance: 1.0, // Maximum for market opportunities
-                regulatory_risk: opportunity.regulatory_barriers.length / 10 // Normalize
+                regulatory_risk: opportunity.regulatory_barriers.length / 10, // Normalize
             });
 
             // Create attention atoms for ingredient gaps
@@ -496,7 +492,7 @@ export class AdaptiveAttentionAllocator {
                     utility: 0.8,
                     cost: 2.0, // Research cost for new ingredients
                     market_relevance: 0.9,
-                    regulatory_risk: 0.7 // New ingredients typically have higher regulatory risk
+                    regulatory_risk: 0.7, // New ingredients typically have higher regulatory risk
                 });
             });
         });
@@ -509,14 +505,10 @@ export class AdaptiveAttentionAllocator {
         const sizeScore = Math.log10(opportunity.market_size_estimate / 1e6) / 4; // Normalize to 0-1
         const growthScore = Math.min(1.0, opportunity.growth_rate * 2); // Cap at 100% growth
         const competitiveScore = this.getCompetitiveLandscapeScore(opportunity.competitive_landscape);
-        const timeScore = Math.max(0, 1 - (opportunity.time_to_market / 60)); // Penalty for long time to market
+        const timeScore = Math.max(0, 1 - opportunity.time_to_market / 60); // Penalty for long time to market
         const confidenceScore = opportunity.confidence_level;
 
-        return (sizeScore * 0.3 + 
-                growthScore * 0.3 + 
-                competitiveScore * 0.2 + 
-                timeScore * 0.1 + 
-                confidenceScore * 0.1);
+        return sizeScore * 0.3 + growthScore * 0.3 + competitiveScore * 0.2 + timeScore * 0.1 + confidenceScore * 0.1;
     }
 
     /**
@@ -524,10 +516,10 @@ export class AdaptiveAttentionAllocator {
      */
     private getCompetitiveLandscapeScore(landscape: string): number {
         const scores = {
-            'early_stage': 0.9,
-            'emerging': 0.7,
-            'competitive': 0.5,
-            'saturated': 0.2
+            early_stage: 0.9,
+            emerging: 0.7,
+            competitive: 0.5,
+            saturated: 0.2,
         };
         return scores[landscape as keyof typeof scores] || 0.5;
     }
@@ -536,11 +528,11 @@ export class AdaptiveAttentionAllocator {
      * Calculate market utility
      */
     private calculateMarketUtility(opportunity: MarketOpportunity): number {
-        const riskAdjustedReturn = (opportunity.growth_rate * opportunity.market_size_estimate) / 
-                                 (opportunity.regulatory_barriers.length + 1);
-        
-        const timeAdjustedReturn = riskAdjustedReturn / Math.pow(opportunity.time_to_market / 12, 0.5);
-        
+        const riskAdjustedReturn =
+            (opportunity.growth_rate * opportunity.market_size_estimate) / (opportunity.regulatory_barriers.length + 1);
+
+        const timeAdjustedReturn = riskAdjustedReturn / (opportunity.time_to_market / 12) ** 0.5;
+
         // Normalize to 0-1 range
         return Math.min(1.0, timeAdjustedReturn / 1e10);
     }
@@ -552,7 +544,7 @@ export class AdaptiveAttentionAllocator {
         ingredients.forEach(ingredient => {
             this.regulatoryPriorities.forEach((priority, regulation) => {
                 const complianceRisk = this.assessRegulatoryRisk(ingredient, regulation);
-                
+
                 this.addAttentionAtom({
                     id: `regulatory_${ingredient.id}_${regulation}`,
                     type: 'constraint',
@@ -564,7 +556,7 @@ export class AdaptiveAttentionAllocator {
                     utility: priority,
                     cost: complianceRisk * 2,
                     market_relevance: 0.6,
-                    regulatory_risk: complianceRisk
+                    regulatory_risk: complianceRisk,
                 });
             });
         });
@@ -618,7 +610,7 @@ export class AdaptiveAttentionAllocator {
         regulatory_compliance_level: number;
     } {
         const distribution = this.allocateAttention();
-        
+
         const computationalEfficiency = this.calculateComputationalEfficiency();
         const marketCoverage = this.calculateMarketOpportunityCoverage();
         const complianceLevel = this.calculateRegulatoryComplianceLevel();
@@ -628,12 +620,12 @@ export class AdaptiveAttentionAllocator {
             attention_distribution: {
                 high: distribution.high_attention.length,
                 medium: distribution.medium_attention.length,
-                low: distribution.low_attention.length
+                low: distribution.low_attention.length,
             },
             top_focus_areas: distribution.focus_areas,
             computational_efficiency: computationalEfficiency,
             market_opportunity_coverage: marketCoverage,
-            regulatory_compliance_level: complianceLevel
+            regulatory_compliance_level: complianceLevel,
         };
     }
 
@@ -652,7 +644,7 @@ export class AdaptiveAttentionAllocator {
 
         const successRate = recentHistory.filter(entry => entry.success).length / recentHistory.length;
         const avgCost = recentHistory.reduce((sum, entry) => sum + entry.cost, 0) / recentHistory.length;
-        
+
         // Efficiency = success rate / normalized cost
         return successRate / (1 + avgCost / 10);
     }
@@ -661,9 +653,10 @@ export class AdaptiveAttentionAllocator {
      * Calculate market opportunity coverage
      */
     private calculateMarketOpportunityCoverage(): number {
-        const marketAtoms = Array.from(this.attentionSpace.values())
-            .filter(atom => atom.type === 'market_opportunity' || 
-                           (atom.type === 'ingredient' && atom.content.market_opportunity));
+        const marketAtoms = Array.from(this.attentionSpace.values()).filter(
+            atom =>
+                atom.type === 'market_opportunity' || (atom.type === 'ingredient' && atom.content.market_opportunity),
+        );
 
         return Math.min(1.0, marketAtoms.length / this.marketOpportunities.size);
     }
@@ -672,12 +665,12 @@ export class AdaptiveAttentionAllocator {
      * Calculate regulatory compliance attention level
      */
     private calculateRegulatoryComplianceLevel(): number {
-        const regulatoryAtoms = Array.from(this.attentionSpace.values())
-            .filter(atom => atom.type === 'constraint');
+        const regulatoryAtoms = Array.from(this.attentionSpace.values()).filter(atom => atom.type === 'constraint');
 
-        const avgAttention = regulatoryAtoms.length > 0 ?
-            regulatoryAtoms.reduce((sum, atom) => sum + atom.attention_value, 0) / regulatoryAtoms.length :
-            0;
+        const avgAttention =
+            regulatoryAtoms.length > 0
+                ? regulatoryAtoms.reduce((sum, atom) => sum + atom.attention_value, 0) / regulatoryAtoms.length
+                : 0;
 
         return Math.min(1.0, avgAttention / 500); // Normalize to 0-1
     }

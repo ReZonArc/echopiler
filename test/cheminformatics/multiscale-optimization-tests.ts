@@ -1,16 +1,24 @@
 /**
  * Test Cases for Multiscale Constraint Optimization in Cosmeceutical Formulation
- * 
+ *
  * This test suite validates the implementation of OpenCog-inspired features for
  * multiscale constraint optimization, including INCI-driven search space reduction,
  * adaptive attention allocation, and recursive optimization pathways.
  */
 
-import {describe, it, expect, beforeEach} from 'vitest';
-import {INCISearchSpaceReducer, INCIUtilities, SearchSpaceReductionConfig} from '../../lib/cheminformatics/inci-search-space-reducer.js';
+import {beforeEach, describe, expect, it} from 'vitest';
 import {AdaptiveAttentionAllocator, AttentionAtom} from '../../lib/cheminformatics/adaptive-attention-allocator.js';
-import {MultiscaleOptimizer, OptimizationContext, MultiscaleOptimizationConfig} from '../../lib/cheminformatics/multiscale-optimizer.js';
-import {CosmeticIngredient, CosmeticFormulation} from '../../types/cheminformatics/cosmetic-chemistry.interfaces.js';
+import {
+    INCISearchSpaceReducer,
+    INCIUtilities,
+    SearchSpaceReductionConfig,
+} from '../../lib/cheminformatics/inci-search-space-reducer.js';
+import {
+    MultiscaleOptimizationConfig,
+    MultiscaleOptimizer,
+    OptimizationContext,
+} from '../../lib/cheminformatics/multiscale-optimizer.js';
+import {CosmeticFormulation, CosmeticIngredient} from '../../types/cheminformatics/cosmetic-chemistry.interfaces.js';
 
 describe('INCI-Driven Search Space Reduction', () => {
     let reducer: INCISearchSpaceReducer;
@@ -25,16 +33,16 @@ describe('INCI-Driven Search Space Reduction', () => {
             skin_penetration_requirements: ['stratum_corneum', 'epidermis'],
             stability_requirements: ['oxidation_resistant', 'ph_stable'],
             cost_constraints: {min: 0.5, max: 15.0},
-            regulatory_regions: ['EU', 'FDA']
+            regulatory_regions: ['EU', 'FDA'],
         };
     });
 
     describe('Search Space Reduction Algorithm', () => {
         it('should reduce ingredient search space based on INCI constraints', async () => {
             const targetFormulation = {type: 'SKINCARE_FORMULATION' as const};
-            
+
             const result = await reducer.reduceSearchSpace(targetFormulation, testConfig);
-            
+
             expect(result.reduced_search_space).toBeDefined();
             expect(result.reduced_search_space.length).toBeLessThanOrEqual(testConfig.max_ingredients);
             expect(result.optimization_metrics.space_reduction_ratio).toBeGreaterThan(0);
@@ -42,23 +50,25 @@ describe('INCI-Driven Search Space Reduction', () => {
 
         it('should estimate concentrations from INCI ordering', async () => {
             const targetFormulation = {type: 'SKINCARE_FORMULATION' as const};
-            
+
             const result = await reducer.reduceSearchSpace(targetFormulation, testConfig);
-            
+
             expect(result.estimated_concentrations).toBeDefined();
             expect(result.estimated_concentrations.size).toBeGreaterThan(0);
-            
+
             // Verify total concentration is within limits
-            const totalConcentration = Array.from(result.estimated_concentrations.values())
-                .reduce((sum, conc) => sum + conc, 0);
+            const totalConcentration = Array.from(result.estimated_concentrations.values()).reduce(
+                (sum, conc) => sum + conc,
+                0,
+            );
             expect(totalConcentration).toBeLessThanOrEqual(testConfig.max_total_actives_concentration);
         });
 
         it('should calculate therapeutic vector coverage', async () => {
             const targetFormulation = {type: 'SKINCARE_FORMULATION' as const};
-            
+
             const result = await reducer.reduceSearchSpace(targetFormulation, testConfig);
-            
+
             expect(result.therapeutic_vector_coverage).toBeDefined();
             testConfig.target_therapeutic_vectors.forEach(vector => {
                 expect(result.therapeutic_vector_coverage.has(vector)).toBe(true);
@@ -69,18 +79,18 @@ describe('INCI-Driven Search Space Reduction', () => {
 
         it('should generate synergy matrix for ingredient combinations', async () => {
             const targetFormulation = {type: 'SKINCARE_FORMULATION' as const};
-            
+
             const result = await reducer.reduceSearchSpace(targetFormulation, testConfig);
-            
+
             expect(result.synergy_matrix).toBeDefined();
             expect(result.synergy_matrix.size).toBeGreaterThan(0);
-            
+
             // Verify matrix symmetry and valid values
             result.synergy_matrix.forEach((row, ingredient1) => {
                 row.forEach((synergyValue, ingredient2) => {
                     expect(synergyValue).toBeGreaterThanOrEqual(0);
                     expect(synergyValue).toBeLessThanOrEqual(1);
-                    
+
                     // Check reciprocal relationship exists
                     const reciprocal = result.synergy_matrix.get(ingredient2)?.get(ingredient1);
                     if (reciprocal !== undefined) {
@@ -92,11 +102,11 @@ describe('INCI-Driven Search Space Reduction', () => {
 
         it('should enforce regulatory compliance across regions', async () => {
             const targetFormulation = {type: 'SKINCARE_FORMULATION' as const};
-            
+
             const result = await reducer.reduceSearchSpace(targetFormulation, testConfig);
-            
+
             expect(result.regulatory_compliance_score).toBeGreaterThan(0.8);
-            
+
             // All ingredients should be compliant with specified regions
             result.reduced_search_space.forEach(ingredient => {
                 testConfig.regulatory_regions.forEach(region => {
@@ -111,7 +121,7 @@ describe('INCI-Driven Search Space Reduction', () => {
         it('should parse INCI list from product labeling', () => {
             const inciString = 'Aqua, Glycerin, Niacinamide, Hyaluronic Acid, Phenoxyethanol';
             const parsed = INCIUtilities.parseINCIList(inciString);
-            
+
             expect(parsed).toEqual(['aqua', 'glycerin', 'niacinamide', 'hyaluronic acid', 'phenoxyethanol']);
         });
 
@@ -121,20 +131,20 @@ describe('INCI-Driven Search Space Reduction', () => {
                 ['aqua', 70.0],
                 ['glycerin', 10.0],
                 ['niacinamide', 5.0],
-                ['phenoxyethanol', 0.5]
+                ['phenoxyethanol', 0.5],
             ]);
-            
+
             const isValid = INCIUtilities.validateINCIOrdering(inciList, concentrations);
             expect(isValid).toBe(true);
-            
+
             // Test invalid ordering
             const invalidConcentrations = new Map([
                 ['aqua', 70.0],
                 ['glycerin', 5.0], // Should be higher than niacinamide
                 ['niacinamide', 10.0],
-                ['phenoxyethanol', 0.5]
+                ['phenoxyethanol', 0.5],
             ]);
-            
+
             const isInvalid = INCIUtilities.validateINCIOrdering(inciList, invalidConcentrations);
             expect(isInvalid).toBe(false);
         });
@@ -142,15 +152,15 @@ describe('INCI-Driven Search Space Reduction', () => {
         it('should estimate concentrations from INCI ordering using Zipf distribution', () => {
             const inciList = ['aqua', 'glycerin', 'niacinamide', 'retinol'];
             const estimated = INCIUtilities.estimateConcentrationsFromOrdering(inciList, 100);
-            
+
             expect(estimated.size).toBe(4);
-            
+
             // Verify descending order
             const concentrations = Array.from(estimated.values());
             for (let i = 0; i < concentrations.length - 1; i++) {
                 expect(concentrations[i]).toBeGreaterThanOrEqual(concentrations[i + 1]);
             }
-            
+
             // Verify total sums to 100 (approximately)
             const total = concentrations.reduce((sum, conc) => sum + conc, 0);
             expect(Math.abs(total - 100)).toBeLessThan(0.01);
@@ -173,7 +183,7 @@ describe('Adaptive Attention Allocation', () => {
             exploration_factor: 0.1,
             cost_penalty_factor: 0.2,
             market_weight: 0.3,
-            regulatory_weight: 0.4
+            regulatory_weight: 0.4,
         });
 
         testAtoms = [
@@ -192,7 +202,7 @@ describe('Adaptive Attention Allocation', () => {
                 utility: 0.7,
                 cost: 1.2,
                 market_relevance: 0.9,
-                regulatory_risk: 0.2
+                regulatory_risk: 0.2,
             },
             {
                 id: 'retinol_vitamin_c_synergy',
@@ -209,8 +219,8 @@ describe('Adaptive Attention Allocation', () => {
                 utility: 0.9,
                 cost: 2.5,
                 market_relevance: 0.8,
-                regulatory_risk: 0.4
-            }
+                regulatory_risk: 0.4,
+            },
         ];
     });
 
@@ -221,7 +231,7 @@ describe('Adaptive Attention Allocation', () => {
             });
 
             const distribution = allocator.allocateAttention();
-            
+
             expect(distribution.high_attention.length).toBeGreaterThan(0);
             expect(distribution.focus_areas.length).toBeGreaterThan(0);
             expect(distribution.resource_allocation.size).toBeGreaterThan(0);
@@ -243,14 +253,14 @@ describe('Adaptive Attention Allocation', () => {
                 utility: 0.8,
                 cost: 1.0,
                 market_relevance: 0.95,
-                regulatory_risk: 0.1
+                regulatory_risk: 0.1,
             };
 
             const lowMarketAtom: AttentionAtom = {
                 ...highMarketAtom,
                 id: 'low_market_test',
                 market_relevance: 0.3,
-                regulatory_risk: 0.8
+                regulatory_risk: 0.8,
             };
 
             allocator.addAttentionAtom(highMarketAtom);
@@ -258,22 +268,25 @@ describe('Adaptive Attention Allocation', () => {
 
             const distribution = allocator.allocateAttention();
             const highAttentionIds = distribution.high_attention.map(atom => atom.id);
-            
+
             expect(highAttentionIds).toContain('market_opportunity_test');
-            expect(distribution.high_attention.find(atom => atom.id === 'market_opportunity_test')?.attention_value)
-                .toBeGreaterThan(distribution.high_attention.find(atom => atom.id === 'low_market_test')?.attention_value || 0);
+            expect(
+                distribution.high_attention.find(atom => atom.id === 'market_opportunity_test')?.attention_value,
+            ).toBeGreaterThan(
+                distribution.high_attention.find(atom => atom.id === 'low_market_test')?.attention_value || 0,
+            );
         });
 
         it('should implement attention decay over time', () => {
             const atom = testAtoms[0];
             atom.last_accessed = new Date(Date.now() - 24 * 60 * 60 * 1000); // 24 hours ago
-            
+
             allocator.addAttentionAtom(atom);
             const initialAttention = atom.attention_value;
-            
+
             // Simulate time passage
             allocator.updateAttentionDecay();
-            
+
             const currentAttention = atom.attention_value;
             expect(currentAttention).toBeLessThan(initialAttention);
         });
@@ -281,12 +294,12 @@ describe('Adaptive Attention Allocation', () => {
         it('should reinforce attention for successful computations', () => {
             const atom = testAtoms[0];
             allocator.addAttentionAtom(atom);
-            
+
             const initialSTI = atom.short_term_importance;
             const initialConfidence = atom.confidence;
-            
+
             allocator.reinforceAttention(atom.id, true, 1.0);
-            
+
             expect(atom.short_term_importance).toBeGreaterThan(initialSTI);
             expect(atom.confidence).toBeGreaterThan(initialConfidence);
         });
@@ -294,12 +307,12 @@ describe('Adaptive Attention Allocation', () => {
         it('should penalize attention for failed computations', () => {
             const atom = testAtoms[0];
             allocator.addAttentionAtom(atom);
-            
+
             const initialSTI = atom.short_term_importance;
             const initialConfidence = atom.confidence;
-            
+
             allocator.reinforceAttention(atom.id, false, 1.0);
-            
+
             expect(atom.short_term_importance).toBeLessThan(initialSTI);
             expect(atom.confidence).toBeLessThan(initialConfidence);
         });
@@ -308,22 +321,23 @@ describe('Adaptive Attention Allocation', () => {
     describe('Market Opportunity Integration', () => {
         it('should update attention based on market opportunities', () => {
             allocator.updateMarketOpportunityAttention();
-            
+
             const distribution = allocator.allocateAttention();
-            const marketAtoms = distribution.high_attention.filter(atom => 
-                atom.type === 'market_opportunity' || 
-                (atom.type === 'ingredient' && atom.content.market_opportunity)
+            const marketAtoms = distribution.high_attention.filter(
+                atom =>
+                    atom.type === 'market_opportunity' ||
+                    (atom.type === 'ingredient' && atom.content.market_opportunity),
             );
-            
+
             expect(marketAtoms.length).toBeGreaterThan(0);
         });
 
         it('should prioritize high-growth, low-competition opportunities', () => {
             allocator.updateMarketOpportunityAttention();
-            
+
             const distribution = allocator.allocateAttention();
             const focusAreas = distribution.focus_areas;
-            
+
             expect(focusAreas).toContain('market_innovation');
         });
     });
@@ -349,17 +363,20 @@ describe('Adaptive Attention Allocation', () => {
                     onset_time_hours: 24,
                     duration_hours: 48,
                     stability_factors: ['light_sensitive'],
-                    regulatory_status: new Map([['EU', 'pending'], ['FDA', 'restricted']]),
+                    regulatory_status: new Map([
+                        ['EU', 'pending'],
+                        ['FDA', 'restricted'],
+                    ]),
                     evidence_level: 'theoretical',
-                    cost_per_gram: 5.0
-                }
+                    cost_per_gram: 5.0,
+                },
             ];
 
             allocator.updateRegulatoryAttention(testIngredients);
-            
+
             const distribution = allocator.allocateAttention();
             const regulatoryAtoms = distribution.high_attention.filter(atom => atom.type === 'constraint');
-            
+
             expect(regulatoryAtoms.length).toBeGreaterThan(0);
             expect(regulatoryAtoms.some(atom => atom.regulatory_risk > 0.5)).toBe(true);
         });
@@ -368,9 +385,9 @@ describe('Adaptive Attention Allocation', () => {
     describe('Attention Statistics and Insights', () => {
         it('should provide comprehensive attention statistics', () => {
             testAtoms.forEach(atom => allocator.addAttentionAtom(atom));
-            
+
             const stats = allocator.getAttentionStatistics();
-            
+
             expect(stats.total_atoms).toBeGreaterThan(0);
             expect(stats.attention_distribution.high).toBeGreaterThanOrEqual(0);
             expect(stats.attention_distribution.medium).toBeGreaterThanOrEqual(0);
@@ -389,23 +406,23 @@ describe('Multiscale Optimization Engine', () => {
 
     beforeEach(() => {
         optimizer = new MultiscaleOptimizer();
-        
+
         testContext = {
             target_skin_type: 'normal',
             environmental_conditions: new Map([
                 ['temperature', 25],
                 ['humidity', 60],
-                ['uv_index', 5]
+                ['uv_index', 5],
             ]),
             user_preferences: new Map([
                 ['texture', 0.8],
                 ['absorption', 0.9],
-                ['fragrance', 0.3]
+                ['fragrance', 0.3],
             ]),
             regulatory_regions: ['EU', 'FDA'],
             budget_constraints: {min: 2.0, max: 20.0},
             time_constraints: 180, // 6 months
-            market_positioning: 'premium'
+            market_positioning: 'premium',
         };
 
         testConfig = {
@@ -418,16 +435,16 @@ describe('Multiscale Optimization Engine', () => {
             synergy_reward_weight: 1.5,
             stability_weight: 1.0,
             cost_weight: 0.8,
-            efficacy_weight: 2.0
+            efficacy_weight: 2.0,
         };
     });
 
     describe('Multiscale Formulation Optimization', () => {
         it('should optimize formulation for anti-aging therapeutic outcomes', async () => {
             const targetOutcomes = ['anti_aging', 'barrier_enhancement'];
-            
+
             const result = await optimizer.optimizeFormulation(targetOutcomes, testContext, testConfig);
-            
+
             expect(result.optimized_formulation).toBeDefined();
             expect(result.optimization_score).toBeGreaterThan(0);
             expect(result.optimized_formulation.ingredients.length).toBeGreaterThan(0);
@@ -436,9 +453,9 @@ describe('Multiscale Optimization Engine', () => {
 
         it('should satisfy regulatory compliance constraints', async () => {
             const targetOutcomes = ['hydration', 'pigmentation_control'];
-            
+
             const result = await optimizer.optimizeFormulation(targetOutcomes, testContext, testConfig);
-            
+
             // Check regulatory compliance
             result.regulatory_compliance.forEach((compliance, region) => {
                 expect(compliance).toBeGreaterThan(0.8); // At least 80% compliance
@@ -451,9 +468,9 @@ describe('Multiscale Optimization Engine', () => {
 
         it('should achieve therapeutic efficacy across target vectors', async () => {
             const targetOutcomes = ['collagen_synthesis_stimulation', 'barrier_enhancement'];
-            
+
             const result = await optimizer.optimizeFormulation(targetOutcomes, testContext, testConfig);
-            
+
             // Check therapeutic efficacy
             result.therapeutic_efficacy.forEach((efficacy, action) => {
                 expect(efficacy).toBeGreaterThan(0.3); // Minimum therapeutic threshold
@@ -464,9 +481,9 @@ describe('Multiscale Optimization Engine', () => {
 
         it('should respect cost constraints', async () => {
             const targetOutcomes = ['anti_aging'];
-            
+
             const result = await optimizer.optimizeFormulation(targetOutcomes, testContext, testConfig);
-            
+
             expect(result.estimated_cost).toBeLessThanOrEqual(testContext.budget_constraints.max);
             expect(result.estimated_cost).toBeGreaterThanOrEqual(testContext.budget_constraints.min);
 
@@ -476,11 +493,11 @@ describe('Multiscale Optimization Engine', () => {
 
         it('should generate synergy matrix for ingredient interactions', async () => {
             const targetOutcomes = ['anti_aging', 'hydration'];
-            
+
             const result = await optimizer.optimizeFormulation(targetOutcomes, testContext, testConfig);
-            
+
             expect(result.synergy_matrix.size).toBeGreaterThan(0);
-            
+
             // Verify synergy values are within valid range
             result.synergy_matrix.forEach((row, ingredient1) => {
                 row.forEach((synergyValue, ingredient2) => {
@@ -492,9 +509,9 @@ describe('Multiscale Optimization Engine', () => {
 
         it('should provide detailed optimization trace', async () => {
             const targetOutcomes = ['barrier_enhancement'];
-            
+
             const result = await optimizer.optimizeFormulation(targetOutcomes, testContext, testConfig);
-            
+
             expect(result.optimization_trace.length).toBeGreaterThan(0);
             expect(result.convergence_metrics.iterations_to_convergence).toBeGreaterThan(0);
             expect(result.convergence_metrics.final_score).toBe(result.optimization_score);
@@ -502,8 +519,13 @@ describe('Multiscale Optimization Engine', () => {
             // Verify trace contains valid optimization steps
             result.optimization_trace.forEach(step => {
                 expect(step.iteration).toBeGreaterThanOrEqual(0);
-                expect(['add_ingredient', 'remove_ingredient', 'adjust_concentration', 'local_search', 'global_jump'])
-                    .toContain(step.action);
+                expect([
+                    'add_ingredient',
+                    'remove_ingredient',
+                    'adjust_concentration',
+                    'local_search',
+                    'global_jump',
+                ]).toContain(step.action);
                 expect(step.reasoning).toBeTruthy();
             });
         });
@@ -512,35 +534,37 @@ describe('Multiscale Optimization Engine', () => {
     describe('Constraint Satisfaction', () => {
         it('should handle incompatible ingredient combinations', async () => {
             const targetOutcomes = ['anti_aging']; // May include retinol + vitamin C
-            
+
             const result = await optimizer.optimizeFormulation(targetOutcomes, testContext, testConfig);
-            
+
             const compatibilityConstraint = result.constraint_satisfaction.get('ingredient_compatibility');
             expect(compatibilityConstraint?.satisfied).toBe(true);
         });
 
         it('should enforce total actives concentration limits', async () => {
             const targetOutcomes = ['anti_aging', 'hydration', 'pigmentation_control'];
-            
+
             const result = await optimizer.optimizeFormulation(targetOutcomes, testContext, testConfig);
-            
-            const totalActives = Array.from(result.optimized_formulation.concentrations.values())
-                .reduce((sum, conc) => sum + conc, 0);
-            
+
+            const totalActives = Array.from(result.optimized_formulation.concentrations.values()).reduce(
+                (sum, conc) => sum + conc,
+                0,
+            );
+
             expect(totalActives).toBeLessThanOrEqual(25.0); // Maximum safe limit
-            
+
             const activesConstraint = result.constraint_satisfaction.get('total_actives_limit');
             expect(activesConstraint?.satisfied).toBe(true);
         });
 
         it('should maximize synergistic therapeutic effects', async () => {
             const targetOutcomes = ['anti_aging', 'barrier_enhancement'];
-            
+
             const result = await optimizer.optimizeFormulation(targetOutcomes, testContext, testConfig);
-            
+
             const synergyConstraint = result.constraint_satisfaction.get('therapeutic_synergy');
             expect(synergyConstraint?.satisfaction_degree).toBeGreaterThan(0.5);
-            
+
             // Verify actual synergistic combinations exist
             let synergyFound = false;
             result.synergy_matrix.forEach(row => {
@@ -555,9 +579,9 @@ describe('Multiscale Optimization Engine', () => {
     describe('Multiscale Skin Model Integration', () => {
         it('should optimize for different skin layer targets', async () => {
             const targetOutcomes = ['collagen_synthesis_stimulation', 'melanin_inhibition'];
-            
+
             const result = await optimizer.optimizeFormulation(targetOutcomes, testContext, testConfig);
-            
+
             // Should contain ingredients targeting different skin layers
             const targetLayers = new Set<string>();
             result.optimized_formulation.ingredients.forEach(ingredient => {
@@ -565,20 +589,19 @@ describe('Multiscale Optimization Engine', () => {
                     targetLayers.add(ingredient.skin_penetration_depth);
                 }
             });
-            
+
             expect(targetLayers.size).toBeGreaterThan(1); // Multiple skin layers targeted
         });
 
         it('should consider penetration requirements for deep dermal targets', async () => {
             const targetOutcomes = ['collagen_synthesis_stimulation']; // Requires dermal penetration
-            
+
             const result = await optimizer.optimizeFormulation(targetOutcomes, testContext, testConfig);
-            
-            const hasDeepPenetrating = result.optimized_formulation.ingredients.some(ingredient =>
-                ingredient.skin_penetration_depth === 'dermis' ||
-                ingredient.molecularWeight! < 1000
+
+            const hasDeepPenetrating = result.optimized_formulation.ingredients.some(
+                ingredient => ingredient.skin_penetration_depth === 'dermis' || ingredient.molecularWeight! < 1000,
             );
-            
+
             expect(hasDeepPenetrating).toBe(true);
         });
     });
@@ -588,26 +611,26 @@ describe('Multiscale Optimization Engine', () => {
         it('should converge within reasonable iteration limits', async () => {
             const targetOutcomes = ['hydration'];
             const quickConfig = {...testConfig, max_iterations: 20, convergence_threshold: 0.01};
-            
+
             const startTime = Date.now();
             const result = await optimizer.optimizeFormulation(targetOutcomes, testContext, quickConfig);
             const duration = Date.now() - startTime;
-            
+
             expect(result.convergence_metrics.iterations_to_convergence).toBeLessThanOrEqual(20);
             expect(duration).toBeLessThan(10000); // Should complete within 10 seconds
         });
 
         it('should show improvement over optimization iterations', async () => {
             const targetOutcomes = ['anti_aging'];
-            
+
             const result = await optimizer.optimizeFormulation(targetOutcomes, testContext, testConfig);
-            
+
             // Verify score improvement trend
             const trace = result.optimization_trace;
             if (trace.length > 5) {
                 const earlyScore = trace.slice(0, 5).reduce((sum, step) => sum + step.score_after, 0) / 5;
                 const lateScore = trace.slice(-5).reduce((sum, step) => sum + step.score_after, 0) / 5;
-                
+
                 expect(lateScore).toBeGreaterThanOrEqual(earlyScore * 0.95); // Allow some variation
             }
         });
@@ -630,17 +653,17 @@ describe('Integrated Multiscale Optimization Pipeline', () => {
             environmental_conditions: new Map([
                 ['temperature', 22],
                 ['humidity', 55],
-                ['uv_index', 6]
+                ['uv_index', 6],
             ]),
             user_preferences: new Map([
                 ['luxury_feel', 0.9],
                 ['fast_absorption', 0.8],
-                ['visible_results', 0.95]
+                ['visible_results', 0.95],
             ]),
             regulatory_regions: ['EU', 'FDA', 'Health_Canada'],
             budget_constraints: {min: 5.0, max: 35.0},
             time_constraints: 365, // 1 year development
-            market_positioning: 'luxury_premium'
+            market_positioning: 'luxury_premium',
         };
 
         const config: MultiscaleOptimizationConfig = {
@@ -653,7 +676,7 @@ describe('Integrated Multiscale Optimization Pipeline', () => {
             synergy_reward_weight: 2.0,
             stability_weight: 1.5,
             cost_weight: 0.6, // Less important for luxury positioning
-            efficacy_weight: 2.5
+            efficacy_weight: 2.5,
         };
 
         // Step 2: Execute optimization
@@ -667,7 +690,7 @@ describe('Integrated Multiscale Optimization Pipeline', () => {
         // Verify multi-objective optimization success
         expect(result.convergence_metrics.constraint_violations).toBeLessThanOrEqual(1);
         expect(result.estimated_cost).toBeLessThanOrEqual(context.budget_constraints.max);
-        
+
         // Verify regulatory compliance across all regions
         context.regulatory_regions.forEach(region => {
             const compliance = result.regulatory_compliance.get(region) || 0;
@@ -701,7 +724,7 @@ describe('Integrated Multiscale Optimization Pipeline', () => {
             regulatory_regions: ['EU'],
             budget_constraints: {min: 0.5, max: 8.0},
             time_constraints: 90,
-            market_positioning: 'drugstore'
+            market_positioning: 'drugstore',
         };
 
         const quickConfig: MultiscaleOptimizationConfig = {
@@ -714,7 +737,7 @@ describe('Integrated Multiscale Optimization Pipeline', () => {
             synergy_reward_weight: 1.0,
             stability_weight: 2.0,
             cost_weight: 2.0, // High importance for drugstore positioning
-            efficacy_weight: 1.5
+            efficacy_weight: 1.5,
         };
 
         const result = await optimizer.optimizeFormulation(targetOutcomes, minimalContext, quickConfig);
@@ -722,10 +745,10 @@ describe('Integrated Multiscale Optimization Pipeline', () => {
         expect(result.optimized_formulation.ingredients.length).toBeGreaterThanOrEqual(3);
         expect(result.optimized_formulation.ingredients.length).toBeLessThanOrEqual(8);
         expect(result.estimated_cost).toBeLessThanOrEqual(minimalContext.budget_constraints.max);
-        
+
         // Should prioritize gentle, well-tolerated ingredients
-        const gentleIngredients = result.optimized_formulation.ingredients.filter(ing =>
-            ing.allergenicity === 'very_low' || ing.allergenicity === 'low'
+        const gentleIngredients = result.optimized_formulation.ingredients.filter(
+            ing => ing.allergenicity === 'very_low' || ing.allergenicity === 'low',
         );
         expect(gentleIngredients.length / result.optimized_formulation.ingredients.length).toBeGreaterThan(0.7);
     });
@@ -750,10 +773,13 @@ export const createMockIngredient = (overrides: Partial<CosmeticIngredient> = {}
     onset_time_hours: 24,
     duration_hours: 48,
     stability_factors: ['ph_stable'],
-    regulatory_status: new Map([['EU', 'approved'], ['FDA', 'approved']]),
+    regulatory_status: new Map([
+        ['EU', 'approved'],
+        ['FDA', 'approved'],
+    ]),
     evidence_level: 'clinical',
     cost_per_gram: 1.0,
-    ...overrides
+    ...overrides,
 });
 
 export const createMockFormulation = (overrides: Partial<CosmeticFormulation> = {}): CosmeticFormulation => ({
@@ -766,16 +792,14 @@ export const createMockFormulation = (overrides: Partial<CosmeticFormulation> = 
     ph_target: 6.0,
     stability_data: {
         formulation_id: 'mock_formulation',
-        stability_factors: [
-            {factor: 'ph_compatibility', risk_level: 'low'}
-        ],
+        stability_factors: [{factor: 'ph_compatibility', risk_level: 'low'}],
         shelf_life_estimate: 24,
         storage_conditions: [{light_protection: true}],
-        stability_rating: 'good'
+        stability_rating: 'good',
     },
     regulatory_approvals: new Map(),
     target_properties: [],
     creation_date: new Date(),
     last_modified: new Date(),
-    ...overrides
+    ...overrides,
 });

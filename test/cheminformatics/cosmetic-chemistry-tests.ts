@@ -22,14 +22,14 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-import { describe, it, expect } from 'vitest';
+import {describe, expect, it} from 'vitest';
 
 import type {
-    CosmeticIngredient,
     CosmeticFormulation,
-    IngredientInteraction,
+    CosmeticIngredient,
     FormulationAnalysis,
-    RegulatoryCompliance
+    IngredientInteraction,
+    RegulatoryCompliance,
 } from '../../types/cheminformatics/cosmetic-chemistry.interfaces.js';
 
 describe('Cosmetic Chemistry Framework', () => {
@@ -44,11 +44,11 @@ describe('Cosmetic Chemistry Framework', () => {
                 molecularWeight: 1000000,
                 functions: ['moisturizing', 'anti_aging', 'wound_healing'],
                 solubility: 'water_soluble',
-                ph_stability_range: { min: 3.0, max: 8.0 },
+                ph_stability_range: {min: 3.0, max: 8.0},
                 max_concentration: 2.0,
                 allergenicity: 'very_low',
                 comedogenicity: 0,
-                pregnancy_safe: true
+                pregnancy_safe: true,
             };
 
             expect(hyaluronicAcid.category).toBe('ACTIVE_INGREDIENT');
@@ -67,12 +67,12 @@ describe('Cosmetic Chemistry Framework', () => {
                 subtype: 'VITAMIN',
                 functions: ['antioxidant', 'brightening'],
                 solubility: 'water_soluble',
-                ph_stability_range: { min: 2.0, max: 3.5 },
+                ph_stability_range: {min: 2.0, max: 3.5},
                 allergenicity: 'low',
                 sensitive_properties: {
                     oxidation_prone: true,
-                    light_sensitive: true
-                }
+                    light_sensitive: true,
+                },
             };
 
             expect(vitaminC.sensitive_properties?.oxidation_prone).toBe(true);
@@ -94,7 +94,7 @@ describe('Cosmetic Chemistry Framework', () => {
                         category: 'HUMECTANT',
                         functions: ['moisturizing'],
                         solubility: 'water_soluble',
-                        allergenicity: 'very_low'
+                        allergenicity: 'very_low',
                     },
                     {
                         id: 'gly_001',
@@ -103,29 +103,29 @@ describe('Cosmetic Chemistry Framework', () => {
                         category: 'HUMECTANT',
                         functions: ['moisturizing'],
                         solubility: 'water_soluble',
-                        allergenicity: 'very_low'
-                    }
+                        allergenicity: 'very_low',
+                    },
                 ],
                 concentrations: new Map([
                     ['ha_001', 1.0],
-                    ['gly_001', 5.0]
+                    ['gly_001', 5.0],
                 ]),
-                total_cost: 15.50,
+                total_cost: 15.5,
                 ph_target: 5.5,
                 target_properties: [
-                    { name: 'hydration', value: 'high', unit: 'subjective' },
-                    { name: 'texture', value: 'lightweight', unit: 'subjective' }
+                    {name: 'hydration', value: 'high', unit: 'subjective'},
+                    {name: 'texture', value: 'lightweight', unit: 'subjective'},
                 ],
                 physical_properties: [
-                    { name: 'pH', value: 5.5, type: 'PH_PROPERTY', unit: 'pH units' },
-                    { name: 'viscosity', value: 'medium', type: 'VISCOSITY_PROPERTY' }
+                    {name: 'pH', value: 5.5, type: 'PH_PROPERTY', unit: 'pH units'},
+                    {name: 'viscosity', value: 'medium', type: 'VISCOSITY_PROPERTY'},
                 ],
                 regulatory_approvals: new Map([
                     ['EU', 'approved'],
-                    ['FDA', 'approved']
+                    ['FDA', 'approved'],
                 ]),
                 creation_date: new Date(),
-                last_modified: new Date()
+                last_modified: new Date(),
             };
 
             expect(moisturizer.type).toBe('SKINCARE_FORMULATION');
@@ -144,7 +144,7 @@ describe('Cosmetic Chemistry Framework', () => {
                 mechanism: 'both_water_soluble_neutral_pH',
                 ph_dependent: false,
                 concentration_dependent: false,
-                evidence_level: 'clinical'
+                evidence_level: 'clinical',
             };
 
             expect(compatibleInteraction.interaction_type).toBe('COMPATIBLE');
@@ -159,7 +159,7 @@ describe('Cosmetic Chemistry Framework', () => {
                 mechanism: 'pH_incompatibility',
                 ph_dependent: true,
                 evidence_level: 'theoretical',
-                references: ['Cosmetic Chemistry Journal, 2023']
+                references: ['Cosmetic Chemistry Journal, 2023'],
             };
 
             expect(incompatibleInteraction.interaction_type).toBe('INCOMPATIBLE');
@@ -173,7 +173,7 @@ describe('Cosmetic Chemistry Framework', () => {
                 ingredient2: 've_001',
                 interaction_type: 'SYNERGISTIC',
                 mechanism: 'antioxidant_network',
-                evidence_level: 'in_vivo'
+                evidence_level: 'in_vivo',
             };
 
             expect(synergisticInteraction.interaction_type).toBe('SYNERGISTIC');
@@ -192,10 +192,10 @@ describe('Cosmetic Chemistry Framework', () => {
                         ingredient_id: 'ret_001',
                         warning_type: 'pregnancy_caution',
                         description: 'Retinol should be avoided during pregnancy',
-                        recommendation: 'Use alternative anti-aging ingredients for pregnant consumers'
-                    }
+                        recommendation: 'Use alternative anti-aging ingredients for pregnant consumers',
+                    },
                 ],
-                last_checked: new Date()
+                last_checked: new Date(),
             };
 
             expect(compliance.compliant).toBe(true);
@@ -215,11 +215,11 @@ describe('Cosmetic Chemistry Framework', () => {
                         description: 'Retinol concentration exceeds EU limit',
                         current_value: 0.5,
                         limit_value: 0.3,
-                        regulation_reference: 'EU Cosmetic Regulation 1223/2009'
-                    }
+                        regulation_reference: 'EU Cosmetic Regulation 1223/2009',
+                    },
                 ],
                 warnings: [],
-                last_checked: new Date()
+                last_checked: new Date(),
             };
 
             expect(nonCompliant.compliant).toBe(false);
@@ -237,44 +237,44 @@ describe('Cosmetic Chemistry Framework', () => {
                     type: 'SKINCARE_FORMULATION',
                     ingredients: [],
                     concentrations: new Map(),
-                    total_cost: 12.50,
+                    total_cost: 12.5,
                     ph_target: 5.5,
                     target_properties: [],
                     physical_properties: [],
                     regulatory_approvals: new Map([['EU', 'approved']]),
                     creation_date: new Date(),
-                    last_modified: new Date()
+                    last_modified: new Date(),
                 },
                 compatibility_matrix: {
                     ingredients: ['ha_001', 'nia_001'],
                     interactions: [],
                     overall_compatibility: 'excellent',
-                    critical_issues: []
+                    critical_issues: [],
                 },
                 stability_assessment: {
                     formulation_id: 'form_001',
                     stability_factors: [
                         {
                             factor: 'ph_compatibility',
-                            risk_level: 'low'
-                        }
+                            risk_level: 'low',
+                        },
                     ],
                     shelf_life_estimate: 24,
                     storage_conditions: [
                         {
-                            temperature_range: { min: 15, max: 25 },
-                            humidity_range: { min: 40, max: 60 },
-                            light_protection: false
-                        }
+                            temperature_range: {min: 15, max: 25},
+                            humidity_range: {min: 40, max: 60},
+                            light_protection: false,
+                        },
                     ],
-                    stability_rating: 'excellent'
+                    stability_rating: 'excellent',
                 },
                 regulatory_status: {
                     formulation_id: 'form_001',
                     compliant: true,
                     violations: [],
                     warnings: [],
-                    last_checked: new Date()
+                    last_checked: new Date(),
                 },
                 optimization_suggestions: [
                     {
@@ -282,10 +282,10 @@ describe('Cosmetic Chemistry Framework', () => {
                         description: 'Add antioxidant protection',
                         impact: 'medium',
                         implementation_difficulty: 'easy',
-                        estimated_improvement: 'Extend shelf life by 6 months'
-                    }
+                        estimated_improvement: 'Extend shelf life by 6 months',
+                    },
                 ],
-                quality_score: 85
+                quality_score: 85,
             };
 
             expect(analysis.compatibility_matrix.overall_compatibility).toBe('excellent');
@@ -310,7 +310,7 @@ describe('Cosmetic Chemistry Framework', () => {
                 'UV_FILTER',
                 'FRAGRANCE',
                 'COLORANT',
-                'PH_ADJUSTER'
+                'PH_ADJUSTER',
             ];
 
             expect(categories).toContain('ACTIVE_INGREDIENT');
@@ -323,7 +323,7 @@ describe('Cosmetic Chemistry Framework', () => {
                 'water_soluble',
                 'oil_soluble',
                 'both',
-                'insoluble'
+                'insoluble',
             ];
 
             expect(solubilities).toContain('water_soluble');
@@ -336,7 +336,7 @@ describe('Cosmetic Chemistry Framework', () => {
                 'very_low',
                 'low',
                 'medium',
-                'high'
+                'high',
             ];
 
             expect(allergenicityLevels).toContain('very_low');
@@ -356,7 +356,7 @@ describe('Integration with Compiler Explorer', () => {
             category: 'ACTIVE_INGREDIENT',
             functions: ['testing'],
             solubility: 'water_soluble',
-            allergenicity: 'low'
+            allergenicity: 'low',
         };
 
         // Test that our types work with standard JavaScript operations
@@ -373,7 +373,7 @@ describe('Integration with Compiler Explorer', () => {
             category: 'HUMECTANT',
             functions: ['moisturizing'],
             solubility: 'water_soluble',
-            allergenicity: 'very_low'
+            allergenicity: 'very_low',
         };
 
         expect(minimalIngredient.molecularWeight).toBeUndefined();

@@ -50,7 +50,7 @@ export interface FunctionalGroup {
 }
 
 // Cosmetic Ingredient Categories
-export type IngredientCategory = 
+export type IngredientCategory =
     | 'ACTIVE_INGREDIENT'
     | 'PRESERVATIVE'
     | 'EMULSIFIER'
@@ -108,7 +108,7 @@ export interface CosmeticIngredient extends Molecule {
 }
 
 // Formulation Types
-export type FormulationType = 
+export type FormulationType =
     | 'SKINCARE_FORMULATION'
     | 'HAIRCARE_FORMULATION'
     | 'MAKEUP_FORMULATION'
@@ -148,8 +148,13 @@ export interface CosmeticProperty {
 }
 
 export interface PhysicalProperty extends CosmeticProperty {
-    type: 'PH_PROPERTY' | 'VISCOSITY_PROPERTY' | 'STABILITY_PROPERTY' | 
-          'TEXTURE_PROPERTY' | 'SPF_PROPERTY' | 'SOLUBILITY_PROPERTY';
+    type:
+        | 'PH_PROPERTY'
+        | 'VISCOSITY_PROPERTY'
+        | 'STABILITY_PROPERTY'
+        | 'TEXTURE_PROPERTY'
+        | 'SPF_PROPERTY'
+        | 'SOLUBILITY_PROPERTY';
 }
 
 export interface SensoryProperty extends CosmeticProperty {
@@ -158,11 +163,7 @@ export interface SensoryProperty extends CosmeticProperty {
 }
 
 // Interaction Types
-export type InteractionType = 
-    | 'COMPATIBLE'
-    | 'INCOMPATIBLE' 
-    | 'SYNERGISTIC'
-    | 'ANTAGONISTIC';
+export type InteractionType = 'COMPATIBLE' | 'INCOMPATIBLE' | 'SYNERGISTIC' | 'ANTAGONISTIC';
 
 export interface IngredientInteraction {
     ingredient1: string; // Ingredient ID
@@ -178,8 +179,13 @@ export interface IngredientInteraction {
 // Safety and Regulatory Types
 export interface SafetyAssessment {
     ingredient_id: string;
-    assessment_type: 'acute_toxicity' | 'skin_irritation' | 'eye_irritation' | 
-                     'skin_sensitisation' | 'genotoxicity' | 'carcinogenicity';
+    assessment_type:
+        | 'acute_toxicity'
+        | 'skin_irritation'
+        | 'eye_irritation'
+        | 'skin_sensitisation'
+        | 'genotoxicity'
+        | 'carcinogenicity';
     result: 'safe' | 'caution' | 'restricted' | 'prohibited';
     concentration_limit?: number;
     conditions?: string[];
@@ -214,8 +220,11 @@ export interface RegulatoryCompliance {
 
 export interface RegulatoryViolation {
     ingredient_id: string;
-    violation_type: 'concentration_exceeded' | 'prohibited_ingredient' | 
-                    'missing_declaration' | 'incompatible_combination';
+    violation_type:
+        | 'concentration_exceeded'
+        | 'prohibited_ingredient'
+        | 'missing_declaration'
+        | 'incompatible_combination';
     description: string;
     current_value?: number;
     limit_value?: number;
@@ -240,15 +249,14 @@ export interface StabilityData {
 }
 
 export interface StabilityFactor {
-    factor: 'ph_compatibility' | 'oxidation_risk' | 'light_sensitivity' | 
-            'temperature_stability' | 'microbial_growth';
+    factor: 'ph_compatibility' | 'oxidation_risk' | 'light_sensitivity' | 'temperature_stability' | 'microbial_growth';
     risk_level: 'low' | 'medium' | 'high';
     mitigation_strategies?: string[];
 }
 
 export interface StorageCondition {
-    temperature_range?: { min: number; max: number }; // Celsius
-    humidity_range?: { min: number; max: number }; // Percentage
+    temperature_range?: {min: number; max: number}; // Celsius
+    humidity_range?: {min: number; max: number}; // Percentage
     light_protection: boolean;
     atmosphere?: 'air' | 'nitrogen' | 'vacuum';
     container_type?: string;
@@ -256,8 +264,7 @@ export interface StorageCondition {
 
 export interface EnvironmentalImpact {
     ingredient_id: string;
-    biodegradability: 'readily_biodegradable' | 'inherently_biodegradable' | 
-                     'not_readily_biodegradable' | 'persistent';
+    biodegradability: 'readily_biodegradable' | 'inherently_biodegradable' | 'not_readily_biodegradable' | 'persistent';
     aquatic_toxicity?: 'low' | 'medium' | 'high';
     bioaccumulation_potential?: 'low' | 'medium' | 'high';
     carbon_footprint?: number; // kg CO2 equivalent
@@ -282,8 +289,12 @@ export interface CompatibilityMatrix {
 }
 
 export interface OptimizationSuggestion {
-    type: 'ingredient_substitution' | 'concentration_adjustment' | 
-          'ph_modification' | 'stability_improvement' | 'cost_reduction';
+    type:
+        | 'ingredient_substitution'
+        | 'concentration_adjustment'
+        | 'ph_modification'
+        | 'stability_improvement'
+        | 'cost_reduction';
     description: string;
     impact: 'low' | 'medium' | 'high';
     implementation_difficulty: 'easy' | 'moderate' | 'difficult';
@@ -314,8 +325,8 @@ export interface IngredientSearchCriteria {
     solubility?: string;
     max_allergenicity?: string;
     pregnancy_safe?: boolean;
-    max_concentration_range?: { min: number; max: number };
-    ph_range?: { min: number; max: number };
+    max_concentration_range?: {min: number; max: number};
+    ph_range?: {min: number; max: number};
     exclude_ingredients?: string[];
 }
 
@@ -323,7 +334,7 @@ export interface FormulationSearchCriteria {
     type?: FormulationType;
     target_properties?: string[];
     max_ingredients?: number;
-    budget_range?: { min: number; max: number };
+    budget_range?: {min: number; max: number};
     regulatory_regions?: string[];
     exclude_allergens?: boolean;
 }
@@ -351,8 +362,12 @@ export interface CheminformaticsRepository {
 
 // Event Types for Real-time Updates
 export interface CheminformaticsEvent {
-    type: 'ingredient_added' | 'formulation_created' | 'analysis_completed' | 
-          'regulatory_update' | 'interaction_discovered';
+    type:
+        | 'ingredient_added'
+        | 'formulation_created'
+        | 'analysis_completed'
+        | 'regulatory_update'
+        | 'interaction_discovered';
     timestamp: Date;
     data: any;
     source: string;

@@ -1,10 +1,10 @@
 /**
  * INCI-Driven Search Space Reduction for Cosmeceutical Formulation
- * 
+ *
  * This module implements advanced algorithms for reducing the cosmetic ingredient
  * search space based on INCI (International Nomenclature of Cosmetic Ingredients)
  * constraints, regulatory compliance, and multiscale optimization requirements.
- * 
+ *
  * Key Features:
  * - INCI subset constraint satisfaction
  * - Concentration estimation from regulatory ordering
@@ -13,7 +13,11 @@
  * - Synergistic ingredient discovery
  */
 
-import {CosmeticIngredient, CosmeticFormulation, IngredientCategory} from '../../types/cheminformatics/cosmetic-chemistry.interfaces.js';
+import {
+    CosmeticFormulation,
+    CosmeticIngredient,
+    IngredientCategory,
+} from '../../types/cheminformatics/cosmetic-chemistry.interfaces.js';
 
 export interface INCIConstraint {
     approved_ingredients: Set<string>;
@@ -69,7 +73,7 @@ export class INCISearchSpaceReducer {
         this.regulatoryConstraints = new Map();
         this.synergyCombinations = new Map();
         this.incompatibilityMatrix = new Map();
-        
+
         this.initializeDatabase();
     }
 
@@ -79,13 +83,13 @@ export class INCISearchSpaceReducer {
     private initializeDatabase(): void {
         // Initialize therapeutic vectors for multiscale optimization
         this.initializeTherapeuticVectors();
-        
+
         // Load regulatory constraints for different regions
         this.initializeRegulatoryConstraints();
-        
+
         // Initialize ingredient interaction matrices
         this.initializeInteractionMatrices();
-        
+
         // Load comprehensive ingredient database
         this.loadIngredientDatabase();
     }
@@ -103,9 +107,9 @@ export class INCISearchSpaceReducer {
                 synergy_potentials: new Map([
                     ['peptides', 0.8],
                     ['vitamin_c', 0.7],
-                    ['retinoids', 0.9]
+                    ['retinoids', 0.9],
                 ]),
-                efficacy_evidence_level: 'clinical'
+                efficacy_evidence_level: 'clinical',
             },
             {
                 name: 'barrier_enhancement',
@@ -115,9 +119,9 @@ export class INCISearchSpaceReducer {
                 synergy_potentials: new Map([
                     ['ceramides', 0.9],
                     ['cholesterol', 0.7],
-                    ['fatty_acids', 0.8]
+                    ['fatty_acids', 0.8],
                 ]),
-                efficacy_evidence_level: 'in_vivo'
+                efficacy_evidence_level: 'in_vivo',
             },
             {
                 name: 'hydration',
@@ -127,9 +131,9 @@ export class INCISearchSpaceReducer {
                 synergy_potentials: new Map([
                     ['hyaluronic_acid', 0.9],
                     ['glycerin', 0.8],
-                    ['urea', 0.7]
+                    ['urea', 0.7],
                 ]),
-                efficacy_evidence_level: 'clinical'
+                efficacy_evidence_level: 'clinical',
             },
             {
                 name: 'pigmentation_control',
@@ -139,10 +143,10 @@ export class INCISearchSpaceReducer {
                 synergy_potentials: new Map([
                     ['niacinamide', 0.8],
                     ['arbutin', 0.7],
-                    ['vitamin_c', 0.6]
+                    ['vitamin_c', 0.6],
                 ]),
-                efficacy_evidence_level: 'clinical'
-            }
+                efficacy_evidence_level: 'clinical',
+            },
         ];
 
         vectors.forEach(vector => {
@@ -157,42 +161,63 @@ export class INCISearchSpaceReducer {
         // EU Cosmetic Regulation constraints
         const euConstraints: INCIConstraint = {
             approved_ingredients: new Set([
-                'aqua', 'glycerin', 'hyaluronic_acid', 'niacinamide', 'retinol',
-                'vitamin_c', 'peptides', 'ceramides', 'squalane', 'jojoba_oil',
-                'phenoxyethanol', 'ethylhexylglycerin', 'tocopherol'
+                'aqua',
+                'glycerin',
+                'hyaluronic_acid',
+                'niacinamide',
+                'retinol',
+                'vitamin_c',
+                'peptides',
+                'ceramides',
+                'squalane',
+                'jojoba_oil',
+                'phenoxyethanol',
+                'ethylhexylglycerin',
+                'tocopherol',
             ]),
             concentration_limits: new Map([
                 ['retinol', {min: 0.0, max: 0.3}],
                 ['niacinamide', {min: 0.0, max: 12.0}],
                 ['vitamin_c', {min: 0.0, max: 20.0}],
-                ['phenoxyethanol', {min: 0.0, max: 1.0}]
+                ['phenoxyethanol', {min: 0.0, max: 1.0}],
             ]),
             incompatible_pairs: new Set([
-                'retinol:vitamin_c', 'benzoyl_peroxide:retinol',
-                'aha:bha', 'peptides:strong_acids'
+                'retinol:vitamin_c',
+                'benzoyl_peroxide:retinol',
+                'aha:bha',
+                'peptides:strong_acids',
             ]),
             regulatory_region: 'EU',
-            allergen_threshold: 0.001
+            allergen_threshold: 0.001,
         };
 
         // FDA constraints (more permissive in some areas)
         const fdaConstraints: INCIConstraint = {
             approved_ingredients: new Set([
-                'water', 'glycerin', 'hyaluronic_acid', 'niacinamide', 'retinol',
-                'l_ascorbic_acid', 'peptides', 'ceramides', 'squalane', 'jojoba_oil',
-                'phenoxyethanol', 'ethylhexylglycerin', 'tocopherol', 'hydroquinone'
+                'water',
+                'glycerin',
+                'hyaluronic_acid',
+                'niacinamide',
+                'retinol',
+                'l_ascorbic_acid',
+                'peptides',
+                'ceramides',
+                'squalane',
+                'jojoba_oil',
+                'phenoxyethanol',
+                'ethylhexylglycerin',
+                'tocopherol',
+                'hydroquinone',
             ]),
             concentration_limits: new Map([
                 ['retinol', {min: 0.0, max: 1.0}],
                 ['niacinamide', {min: 0.0, max: 10.0}],
                 ['l_ascorbic_acid', {min: 0.0, max: 20.0}],
-                ['hydroquinone', {min: 0.0, max: 2.0}]
+                ['hydroquinone', {min: 0.0, max: 2.0}],
             ]),
-            incompatible_pairs: new Set([
-                'retinol:l_ascorbic_acid', 'hydroquinone:retinol'
-            ]),
+            incompatible_pairs: new Set(['retinol:l_ascorbic_acid', 'hydroquinone:retinol']),
             regulatory_region: 'FDA',
-            allergen_threshold: 0.01
+            allergen_threshold: 0.01,
         };
 
         this.regulatoryConstraints.set('EU', euConstraints);
@@ -209,7 +234,7 @@ export class INCISearchSpaceReducer {
             ['niacinamide', 'hyaluronic_acid'],
             ['peptides', 'vitamin_c'],
             ['ceramides', 'cholesterol'],
-            ['retinol', 'peptides']
+            ['retinol', 'peptides'],
         ];
 
         synergyData.forEach(([ing1, ing2]) => {
@@ -228,7 +253,7 @@ export class INCISearchSpaceReducer {
             ['retinol', 'vitamin_c'],
             ['benzoyl_peroxide', 'retinol'],
             ['aha', 'retinol'],
-            ['copper_peptides', 'vitamin_c']
+            ['copper_peptides', 'vitamin_c'],
         ];
 
         incompatibilityData.forEach(([ing1, ing2]) => {
@@ -266,9 +291,12 @@ export class INCISearchSpaceReducer {
                 onset_time_hours: 1,
                 duration_hours: 24,
                 stability_factors: ['ph_sensitive', 'heat_sensitive'],
-                regulatory_status: new Map([['EU', 'approved'], ['FDA', 'approved']]),
+                regulatory_status: new Map([
+                    ['EU', 'approved'],
+                    ['FDA', 'approved'],
+                ]),
                 evidence_level: 'clinical',
-                cost_per_gram: 0.15
+                cost_per_gram: 0.15,
             },
             {
                 id: 'niacinamide',
@@ -288,9 +316,12 @@ export class INCISearchSpaceReducer {
                 onset_time_hours: 4,
                 duration_hours: 12,
                 stability_factors: ['light_stable', 'heat_stable'],
-                regulatory_status: new Map([['EU', 'approved'], ['FDA', 'approved']]),
+                regulatory_status: new Map([
+                    ['EU', 'approved'],
+                    ['FDA', 'approved'],
+                ]),
                 evidence_level: 'clinical',
-                cost_per_gram: 0.08
+                cost_per_gram: 0.08,
             },
             {
                 id: 'retinol',
@@ -310,10 +341,13 @@ export class INCISearchSpaceReducer {
                 onset_time_hours: 72,
                 duration_hours: 168,
                 stability_factors: ['light_sensitive', 'oxygen_sensitive', 'heat_sensitive'],
-                regulatory_status: new Map([['EU', 'approved'], ['FDA', 'approved']]),
+                regulatory_status: new Map([
+                    ['EU', 'approved'],
+                    ['FDA', 'approved'],
+                ]),
                 evidence_level: 'clinical',
-                cost_per_gram: 2.50
-            }
+                cost_per_gram: 2.5,
+            },
         ];
 
         ingredients.forEach(ingredient => {
@@ -326,50 +360,48 @@ export class INCISearchSpaceReducer {
      */
     public async reduceSearchSpace(
         targetFormulation: Partial<CosmeticFormulation>,
-        config: SearchSpaceReductionConfig
+        config: SearchSpaceReductionConfig,
     ): Promise<MultiscaleOptimizationResult> {
         // Step 1: Apply INCI constraints
         const inciFilteredIngredients = this.applyINCIConstraints(
             Array.from(this.ingredientDatabase.values()),
-            config.regulatory_regions
+            config.regulatory_regions,
         );
 
         // Step 2: Filter by therapeutic vector requirements
         const therapeuticFilteredIngredients = this.filterByTherapeuticVectors(
             inciFilteredIngredients,
-            config.target_therapeutic_vectors
+            config.target_therapeutic_vectors,
         );
 
         // Step 3: Apply compatibility constraints
         const compatibilityFilteredIngredients = this.applyCompatibilityConstraints(
             therapeuticFilteredIngredients,
-            config.max_ingredients
+            config.max_ingredients,
         );
 
         // Step 4: Optimize concentrations with multiscale considerations
         const concentrationOptimization = this.optimizeConcentrations(
             compatibilityFilteredIngredients,
             config.target_therapeutic_vectors,
-            config.max_total_actives_concentration
+            config.max_total_actives_concentration,
         );
 
         // Step 5: Calculate therapeutic vector coverage
         const therapeuticCoverage = this.calculateTherapeuticVectorCoverage(
             concentrationOptimization.ingredients,
             concentrationOptimization.concentrations,
-            config.target_therapeutic_vectors
+            config.target_therapeutic_vectors,
         );
 
         // Step 6: Generate synergy matrix
-        const synergyMatrix = this.generateSynergyMatrix(
-            concentrationOptimization.ingredients
-        );
+        const synergyMatrix = this.generateSynergyMatrix(concentrationOptimization.ingredients);
 
         // Step 7: Calculate regulatory compliance score
         const complianceScore = this.calculateRegulatoryComplianceScore(
             concentrationOptimization.ingredients,
             concentrationOptimization.concentrations,
-            config.regulatory_regions
+            config.regulatory_regions,
         );
 
         // Step 8: Calculate optimization metrics
@@ -378,7 +410,7 @@ export class INCISearchSpaceReducer {
             concentrationOptimization.ingredients,
             therapeuticCoverage,
             complianceScore,
-            synergyMatrix
+            synergyMatrix,
         );
 
         return {
@@ -387,24 +419,23 @@ export class INCISearchSpaceReducer {
             therapeutic_vector_coverage: therapeuticCoverage,
             regulatory_compliance_score: complianceScore,
             synergy_matrix: synergyMatrix,
-            optimization_metrics: optimizationMetrics
+            optimization_metrics: optimizationMetrics,
         };
     }
 
     /**
      * Apply INCI constraints to filter ingredients
      */
-    private applyINCIConstraints(
-        ingredients: CosmeticIngredient[],
-        regions: string[]
-    ): CosmeticIngredient[] {
+    private applyINCIConstraints(ingredients: CosmeticIngredient[], regions: string[]): CosmeticIngredient[] {
         return ingredients.filter(ingredient => {
             return regions.every(region => {
                 const constraint = this.regulatoryConstraints.get(region);
                 if (!constraint) return false;
-                
-                return constraint.approved_ingredients.has(ingredient.id) ||
-                       constraint.approved_ingredients.has(ingredient.inci_name.toLowerCase());
+
+                return (
+                    constraint.approved_ingredients.has(ingredient.id) ||
+                    constraint.approved_ingredients.has(ingredient.inci_name.toLowerCase())
+                );
             });
         });
     }
@@ -414,12 +445,10 @@ export class INCISearchSpaceReducer {
      */
     private filterByTherapeuticVectors(
         ingredients: CosmeticIngredient[],
-        targetVectors: string[]
+        targetVectors: string[],
     ): CosmeticIngredient[] {
         return ingredients.filter(ingredient => {
-            return targetVectors.some(vector => 
-                ingredient.therapeutic_vectors?.includes(vector)
-            );
+            return targetVectors.some(vector => ingredient.therapeutic_vectors?.includes(vector));
         });
     }
 
@@ -428,11 +457,11 @@ export class INCISearchSpaceReducer {
      */
     private applyCompatibilityConstraints(
         ingredients: CosmeticIngredient[],
-        maxIngredients: number
+        maxIngredients: number,
     ): CosmeticIngredient[] {
         // Create compatibility graph
         const compatibilityGraph = new Map<string, Set<string>>();
-        
+
         ingredients.forEach(ing => {
             compatibilityGraph.set(ing.id, new Set());
         });
@@ -456,7 +485,7 @@ export class INCISearchSpaceReducer {
     private areIngredientsCompatible(ing1: string, ing2: string): boolean {
         const incompatibles1 = this.incompatibilityMatrix.get(ing1) || new Set();
         const incompatibles2 = this.incompatibilityMatrix.get(ing2) || new Set();
-        
+
         return !incompatibles1.has(ing2) && !incompatibles2.has(ing1);
     }
 
@@ -466,11 +495,11 @@ export class INCISearchSpaceReducer {
     private findMaximalCompatibleSet(
         ingredients: CosmeticIngredient[],
         compatibilityGraph: Map<string, Set<string>>,
-        maxSize: number
+        maxSize: number,
     ): CosmeticIngredient[] {
         // Greedy algorithm: start with ingredient with most connections
-        const sorted = ingredients.sort((a, b) => 
-            (compatibilityGraph.get(b.id)?.size || 0) - (compatibilityGraph.get(a.id)?.size || 0)
+        const sorted = ingredients.sort(
+            (a, b) => (compatibilityGraph.get(b.id)?.size || 0) - (compatibilityGraph.get(a.id)?.size || 0),
         );
 
         const selected = new Set<string>();
@@ -478,9 +507,9 @@ export class INCISearchSpaceReducer {
 
         for (const ingredient of sorted) {
             if (result.length >= maxSize) break;
-            
+
             const isCompatibleWithSelected = Array.from(selected).every(selectedId =>
-                this.areIngredientsCompatible(ingredient.id, selectedId)
+                this.areIngredientsCompatible(ingredient.id, selectedId),
             );
 
             if (isCompatibleWithSelected) {
@@ -498,7 +527,7 @@ export class INCISearchSpaceReducer {
     private optimizeConcentrations(
         ingredients: CosmeticIngredient[],
         targetVectors: string[],
-        maxTotalActives: number
+        maxTotalActives: number,
     ): {ingredients: CosmeticIngredient[]; concentrations: Map<string, number>} {
         const concentrations = new Map<string, number>();
         let totalActives = 0;
@@ -513,19 +542,11 @@ export class INCISearchSpaceReducer {
         // Allocate concentrations based on effectiveness and constraints
         for (const ingredient of sortedIngredients) {
             const minConc = ingredient.concentration_range?.min || 0.1;
-            const maxConc = Math.min(
-                ingredient.concentration_range?.max || 10.0,
-                maxTotalActives - totalActives
-            );
+            const maxConc = Math.min(ingredient.concentration_range?.max || 10.0, maxTotalActives - totalActives);
 
             if (maxConc >= minConc && totalActives < maxTotalActives) {
                 // Calculate optimal concentration based on therapeutic vectors
-                const optimalConc = this.calculateOptimalConcentration(
-                    ingredient,
-                    targetVectors,
-                    minConc,
-                    maxConc
-                );
+                const optimalConc = this.calculateOptimalConcentration(ingredient, targetVectors, minConc, maxConc);
 
                 concentrations.set(ingredient.id, optimalConc);
                 totalActives += optimalConc;
@@ -533,9 +554,7 @@ export class INCISearchSpaceReducer {
         }
 
         // Filter ingredients that received concentration allocations
-        const finalIngredients = sortedIngredients.filter(ing => 
-            concentrations.has(ing.id)
-        );
+        const finalIngredients = sortedIngredients.filter(ing => concentrations.has(ing.id));
 
         return {ingredients: finalIngredients, concentrations};
     }
@@ -543,25 +562,22 @@ export class INCISearchSpaceReducer {
     /**
      * Calculate ingredient effectiveness score for target therapeutic vectors
      */
-    private calculateIngredientEffectivenessScore(
-        ingredient: CosmeticIngredient,
-        targetVectors: string[]
-    ): number {
+    private calculateIngredientEffectivenessScore(ingredient: CosmeticIngredient, targetVectors: string[]): number {
         let score = 0;
-        
+
         targetVectors.forEach(vector => {
             if (ingredient.therapeutic_vectors?.includes(vector)) {
                 const vectorData = this.therapeuticVectors.get(vector);
                 if (vectorData) {
                     // Base score from evidence level
                     const evidenceScore = this.getEvidenceScore(ingredient.evidence_level || 'theoretical');
-                    
+
                     // Synergy bonus
                     const synergyBonus = vectorData.synergy_potentials.get(ingredient.id) || 0;
-                    
+
                     // Safety factor
                     const safetyFactor = this.getSafetyFactor(ingredient.allergenicity);
-                    
+
                     score += evidenceScore * (1 + synergyBonus) * safetyFactor;
                 }
             }
@@ -575,10 +591,10 @@ export class INCISearchSpaceReducer {
      */
     private getEvidenceScore(evidenceLevel: string): number {
         const scores = {
-            'clinical': 1.0,
-            'in_vivo': 0.8,
-            'in_vitro': 0.6,
-            'theoretical': 0.4
+            clinical: 1.0,
+            in_vivo: 0.8,
+            in_vitro: 0.6,
+            theoretical: 0.4,
         };
         return scores[evidenceLevel as keyof typeof scores] || 0.4;
     }
@@ -588,10 +604,10 @@ export class INCISearchSpaceReducer {
      */
     private getSafetyFactor(allergenicity: string): number {
         const factors = {
-            'very_low': 1.0,
-            'low': 0.9,
-            'medium': 0.7,
-            'high': 0.5
+            very_low: 1.0,
+            low: 0.9,
+            medium: 0.7,
+            high: 0.5,
         };
         return factors[allergenicity as keyof typeof factors] || 0.5;
     }
@@ -603,7 +619,7 @@ export class INCISearchSpaceReducer {
         ingredient: CosmeticIngredient,
         targetVectors: string[],
         minConc: number,
-        maxConc: number
+        maxConc: number,
     ): number {
         // Start with middle of range
         let optimalConc = (minConc + maxConc) / 2;
@@ -612,9 +628,9 @@ export class INCISearchSpaceReducer {
         targetVectors.forEach(vector => {
             const vectorData = this.therapeuticVectors.get(vector);
             if (vectorData && ingredient.therapeutic_vectors?.includes(vector)) {
-                const vectorOptimal = (vectorData.required_concentration_range.min + 
-                                    vectorData.required_concentration_range.max) / 2;
-                
+                const vectorOptimal =
+                    (vectorData.required_concentration_range.min + vectorData.required_concentration_range.max) / 2;
+
                 // Weight the optimal concentration towards vector requirements
                 optimalConc = (optimalConc + vectorOptimal) / 2;
             }
@@ -629,7 +645,7 @@ export class INCISearchSpaceReducer {
     private calculateTherapeuticVectorCoverage(
         ingredients: CosmeticIngredient[],
         concentrations: Map<string, number>,
-        targetVectors: string[]
+        targetVectors: string[],
     ): Map<string, number> {
         const coverage = new Map<string, number>();
 
@@ -641,12 +657,10 @@ export class INCISearchSpaceReducer {
                 ingredients.forEach(ingredient => {
                     if (ingredient.therapeutic_vectors?.includes(vector)) {
                         const concentration = concentrations.get(ingredient.id) || 0;
-                        const effectiveness = this.calculateIngredientEffectivenessScore(
-                            ingredient, [vector]
-                        );
-                        
+                        const effectiveness = this.calculateIngredientEffectivenessScore(ingredient, [vector]);
+
                         // Normalize concentration to 0-1 range
-                        const normalizedConc = concentration / (vectorData.required_concentration_range.max);
+                        const normalizedConc = concentration / vectorData.required_concentration_range.max;
                         vectorCoverage += effectiveness * normalizedConc;
                     }
                 });
@@ -666,14 +680,14 @@ export class INCISearchSpaceReducer {
 
         ingredients.forEach(ing1 => {
             const row = new Map<string, number>();
-            
+
             ingredients.forEach(ing2 => {
                 if (ing1.id !== ing2.id) {
                     const synergyScore = this.calculateSynergyScore(ing1.id, ing2.id);
                     row.set(ing2.id, synergyScore);
                 }
             });
-            
+
             matrix.set(ing1.id, row);
         });
 
@@ -696,9 +710,8 @@ export class INCISearchSpaceReducer {
         const ingredient2 = this.ingredientDatabase.get(ing2);
 
         if (ingredient1 && ingredient2) {
-            const sharedVectors = ingredient1.therapeutic_vectors?.filter(v =>
-                ingredient2.therapeutic_vectors?.includes(v)
-            ) || [];
+            const sharedVectors =
+                ingredient1.therapeutic_vectors?.filter(v => ingredient2.therapeutic_vectors?.includes(v)) || [];
 
             if (sharedVectors.length > 0) {
                 return 0.4; // Moderate synergy
@@ -714,7 +727,7 @@ export class INCISearchSpaceReducer {
     private calculateRegulatoryComplianceScore(
         ingredients: CosmeticIngredient[],
         concentrations: Map<string, number>,
-        regions: string[]
+        regions: string[],
     ): number {
         let totalScore = 0;
         let totalChecks = 0;
@@ -757,14 +770,14 @@ export class INCISearchSpaceReducer {
         optimizedIngredients: CosmeticIngredient[],
         therapeuticCoverage: Map<string, number>,
         complianceScore: number,
-        synergyMatrix: Map<string, Map<string, number>>
+        synergyMatrix: Map<string, Map<string, number>>,
     ): MultiscaleOptimizationResult['optimization_metrics'] {
         // Space reduction ratio
-        const spaceReductionRatio = 1 - (optimizedIngredients.length / originalIngredients.length);
+        const spaceReductionRatio = 1 - optimizedIngredients.length / originalIngredients.length;
 
         // Constraint satisfaction score (average of compliance and coverage)
-        const avgCoverage = Array.from(therapeuticCoverage.values()).reduce((a, b) => a + b, 0) / 
-                           therapeuticCoverage.size;
+        const avgCoverage =
+            Array.from(therapeuticCoverage.values()).reduce((a, b) => a + b, 0) / therapeuticCoverage.size;
         const constraintSatisfactionScore = (complianceScore + avgCoverage) / 2;
 
         // Predicted efficacy score based on ingredient quality and synergies
@@ -777,7 +790,7 @@ export class INCISearchSpaceReducer {
             space_reduction_ratio: spaceReductionRatio,
             constraint_satisfaction_score: constraintSatisfactionScore,
             predicted_efficacy_score: efficacyScore,
-            safety_score: safetyScore
+            safety_score: safetyScore,
         };
     }
 
@@ -786,7 +799,7 @@ export class INCISearchSpaceReducer {
      */
     private calculateEfficacyScore(
         ingredients: CosmeticIngredient[],
-        synergyMatrix: Map<string, Map<string, number>>
+        synergyMatrix: Map<string, Map<string, number>>,
     ): number {
         let baseEfficacy = 0;
         let synergyBonus = 0;
@@ -808,8 +821,8 @@ export class INCISearchSpaceReducer {
 
         // Normalize scores
         const normalizedBase = ingredients.length > 0 ? baseEfficacy / ingredients.length : 0;
-        const normalizedSynergy = ingredients.length > 1 ? 
-            synergyBonus / (ingredients.length * (ingredients.length - 1)) : 0;
+        const normalizedSynergy =
+            ingredients.length > 1 ? synergyBonus / (ingredients.length * (ingredients.length - 1)) : 0;
 
         return (normalizedBase + normalizedSynergy * 0.3) / 1.3;
     }
@@ -822,7 +835,7 @@ export class INCISearchSpaceReducer {
 
         ingredients.forEach(ingredient => {
             let ingredientSafety = this.getSafetyFactor(ingredient.allergenicity);
-            
+
             // Pregnancy safety bonus
             if (ingredient.pregnancy_safe) {
                 ingredientSafety *= 1.1;
@@ -853,14 +866,11 @@ export class INCIUtilities {
     /**
      * Validate INCI ordering based on concentration rules
      */
-    static validateINCIOrdering(
-        inciList: string[],
-        concentrations: Map<string, number>
-    ): boolean {
+    static validateINCIOrdering(inciList: string[], concentrations: Map<string, number>): boolean {
         for (let i = 0; i < inciList.length - 1; i++) {
             const currentConc = concentrations.get(inciList[i]) || 0;
             const nextConc = concentrations.get(inciList[i + 1]) || 0;
-            
+
             if (currentConc < nextConc) {
                 return false; // Concentrations should be in descending order
             }
@@ -873,10 +883,10 @@ export class INCIUtilities {
      */
     static estimateConcentrationsFromOrdering(
         inciList: string[],
-        totalConcentration: number = 100
+        totalConcentration: number = 100,
     ): Map<string, number> {
         const concentrations = new Map<string, number>();
-        
+
         // Use Zipf's law approximation for concentration distribution
         let totalWeight = 0;
         for (let i = 1; i <= inciList.length; i++) {
