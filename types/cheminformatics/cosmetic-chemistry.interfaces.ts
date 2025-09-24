@@ -69,7 +69,8 @@ export type IngredientSubtype =
     | 'SYNTHETIC_ACTIVE'
     | 'PEPTIDE'
     | 'VITAMIN'
-    | 'MINERAL';
+    | 'MINERAL'
+    | 'HUMECTANT';
 
 export interface CosmeticIngredient extends Molecule {
     category: IngredientCategory;
@@ -82,10 +83,22 @@ export interface CosmeticIngredient extends Molecule {
         min: number;
         max: number;
     };
+    concentration_range?: {
+        min: number;
+        max: number;
+    };
     max_concentration?: number; // Percentage
     allergenicity: 'very_low' | 'low' | 'medium' | 'high';
     comedogenicity?: number; // 0-5 scale
     pregnancy_safe?: boolean;
+    therapeutic_vectors?: string[];
+    skin_penetration_depth?: string;
+    onset_time_hours?: number;
+    duration_hours?: number;
+    stability_factors?: string[];
+    regulatory_status?: Map<string, string>;
+    evidence_level?: 'theoretical' | 'in_vitro' | 'in_vivo' | 'clinical';
+    cost_per_gram?: number;
     sensitive_properties?: {
         light_sensitive?: boolean;
         oxygen_sensitive?: boolean;
@@ -102,6 +115,7 @@ export type FormulationType =
     | 'FRAGRANCE_FORMULATION';
 
 export interface FormulationIngredient {
+    id: string;
     ingredient: CosmeticIngredient;
     concentration: number; // Percentage
     function_in_formula: string[];
@@ -111,12 +125,18 @@ export interface CosmeticFormulation {
     id: string;
     name: string;
     type: FormulationType;
-    ingredients: FormulationIngredient[];
+    ingredients: CosmeticIngredient[];
+    concentrations: Map<string, number>;
+    total_cost: number;
+    ph_target: number;
     target_properties: CosmeticProperty[];
-    physical_properties: PhysicalProperty[];
+    physical_properties?: PhysicalProperty[];
     target_ph?: number;
     stability_data?: StabilityData;
     regulatory_compliance?: RegulatoryCompliance;
+    regulatory_approvals: Map<string, string>;
+    creation_date: Date;
+    last_modified: Date;
 }
 
 // Property Types
