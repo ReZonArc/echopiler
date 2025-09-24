@@ -30,6 +30,8 @@ Try out at [godbolt.org](https://godbolt.org), or [run your own local instance](
 of what the site lets you achieve, why it's useful, and how to use it is
 [available here](docs/WhatIsCompilerExplorer.md).
 
+For developers and those interested in the technical implementation, comprehensive architecture documentation with system diagrams is available in the [Technical Architecture guide](docs/TechnicalArchitecture.md).
+
 **Compiler Explorer** follows a [Code of Conduct](CODE_OF_CONDUCT.md) which aims to foster an open and welcoming
 environment.
 
