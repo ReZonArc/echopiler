@@ -21,14 +21,15 @@ jobs:
         run: |
           make prereqs
           python3 -m pip install numba
-      - name: Run checks
+      - name: Run checks with verbose error tracing
         run: |
-          npm run lint-check
-          npm run test -- --coverage
-          npm run ts-check
-          python3 ./etc/scripts/util/propscheck.py
-          python3 ./etc/scripts/util/propschecktest.py
-          python3 ./etc/scripts/test_numba_wrapper.py
+          set -e
+          npm run lint-check || { echo "lint-check failed"; exit 1; }
+          npm run test -- --coverage || { echo "test failed"; exit 1; }
+          npm run ts-check || { echo "ts-check failed"; exit 1; }
+          python3 ./etc/scripts/util/propscheck.py || { echo "propscheck.py failed"; exit 1; }
+          python3 ./etc/scripts/util/propschecktest.py || { echo "propschecktest.py failed"; exit 1; }
+          python3 ./etc/scripts/test_numba_wrapper.py || { echo "test_numba_wrapper.py failed"; exit 1; }
       - uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -49,10 +50,11 @@ jobs:
           cache: npm
       - name: Install prerequisites
         run: make prereqs
-      - name: Run checks
+      - name: Run checks with verbose error tracing
         run: |
-          npm run ts-compile
-          npm run webpack
+          set -e
+          npm run ts-compile || { echo "ts-compile failed"; exit 1; }
+          npm run webpack || { echo "webpack failed"; exit 1; }
 
   build_dist:
     if: github.repository_owner == 'compiler-explorer' && github.event_name == 'push'
