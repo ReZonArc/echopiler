@@ -24,7 +24,7 @@
 
 /**
  * TypeScript interfaces for the revolutionary Hypergredient Framework Architecture
- * 
+ *
  * This framework transforms cosmetic formulation from art to science by:
  * 1. Abstracting ingredients into functional classes (Hypergredients)
  * 2. Implementing multi-objective optimization algorithms
@@ -32,19 +32,19 @@
  * 4. Enabling predictive modeling and continuous learning
  */
 
-import type { CosmeticIngredient } from './cosmetic-chemistry.interfaces.js';
+import type {CosmeticIngredient} from './cosmetic-chemistry.interfaces.js';
 
 // Core Hypergredient Classification System
-export type HypergredientClass = 
-    | 'H.CT'  // Cellular Turnover Agents
-    | 'H.CS'  // Collagen Synthesis Promoters
-    | 'H.AO'  // Antioxidant Systems
-    | 'H.BR'  // Barrier Repair Complex
-    | 'H.ML'  // Melanin Modulators
-    | 'H.HY'  // Hydration Systems
-    | 'H.AI'  // Anti-Inflammatory Agents
-    | 'H.MB'  // Microbiome Balancers
-    | 'H.SE'  // Sebum Regulators
+export type HypergredientClass =
+    | 'H.CT' // Cellular Turnover Agents
+    | 'H.CS' // Collagen Synthesis Promoters
+    | 'H.AO' // Antioxidant Systems
+    | 'H.BR' // Barrier Repair Complex
+    | 'H.ML' // Melanin Modulators
+    | 'H.HY' // Hydration Systems
+    | 'H.AI' // Anti-Inflammatory Agents
+    | 'H.MB' // Microbiome Balancers
+    | 'H.SE' // Sebum Regulators
     | 'H.PD'; // Penetration/Delivery Enhancers
 
 export interface HypergredientTaxonomy {
@@ -60,14 +60,14 @@ export interface HypergredientTaxonomy {
 
 // Hypergredient Performance Metrics
 export interface HypergredientMetrics {
-    efficacy_score: number;        // 0-10 scale
-    bioavailability: number;       // 0-100% 
-    stability_index: number;       // 0-10 scale
-    safety_profile: number;        // 0-10 scale
-    cost_efficiency: number;       // calculated score
-    potency_rating: number;        // 0-10 scale
-    onset_time_weeks: number;      // time to effect
-    duration_months: number;       // effect duration
+    efficacy_score: number; // 0-10 scale
+    bioavailability: number; // 0-100%
+    stability_index: number; // 0-10 scale
+    safety_profile: number; // 0-10 scale
+    cost_efficiency: number; // calculated score
+    potency_rating: number; // 0-10 scale
+    onset_time_weeks: number; // time to effect
+    duration_months: number; // effect duration
     evidence_strength: 'weak' | 'moderate' | 'strong' | 'clinical';
 }
 
@@ -80,9 +80,9 @@ export interface HypergredientIngredient extends CosmeticIngredient {
 }
 
 export interface HypergredientInteractionProfile {
-    synergy_partners: Map<string, number>;     // ingredient_id -> synergy_score (0-3)
-    antagonistic_pairs: Map<string, number>;   // ingredient_id -> antagonism_score (0-3)
-    ph_dependencies: Map<string, number>;      // pH -> stability_factor
+    synergy_partners: Map<string, number>; // ingredient_id -> synergy_score (0-3)
+    antagonistic_pairs: Map<string, number>; // ingredient_id -> antagonism_score (0-3)
+    ph_dependencies: Map<string, number>; // pH -> stability_factor
     concentration_dependencies: Map<string, number>; // other_ingredient -> optimal_ratio
 }
 
@@ -94,21 +94,21 @@ export interface HypergredientOptimizationParams {
     weight_synergy: number;
     constraint_min_concentration: number;
     constraint_max_concentration: number;
-    constraint_ph_range: { min: number; max: number };
+    constraint_ph_range: {min: number; max: number};
 }
 
 // Multi-Objective Optimization Framework
 export interface OptimizationObjective {
-    efficacy: number;      // 0.35 default weight
-    safety: number;        // 0.25 default weight
-    stability: number;     // 0.20 default weight
-    cost: number;          // 0.15 default weight
-    synergy: number;       // 0.05 default weight
+    efficacy: number; // 0.35 default weight
+    safety: number; // 0.25 default weight
+    stability: number; // 0.20 default weight
+    cost: number; // 0.15 default weight
+    synergy: number; // 0.05 default weight
 }
 
 export interface FormulationConstraints {
-    ph_range: { min: number; max: number };
-    total_actives_range: { min: number; max: number }; // percentage
+    ph_range: {min: number; max: number};
+    total_actives_range: {min: number; max: number}; // percentage
     max_individual_concentration: number;
     budget_limit: number;
     skin_type_restrictions: string[];
@@ -161,22 +161,27 @@ export interface HypergredientScore {
     };
     network_bonus: number;
     constraint_penalties: number;
-    confidence_interval: { min: number; max: number };
+    confidence_interval: {min: number; max: number};
 }
 
 export interface PerformancePrediction {
     formulation_id: string;
     predicted_efficacy: Map<string, number>; // concern -> predicted_improvement_%
     predicted_timeline: Map<string, number>; // concern -> weeks_to_effect
-    confidence_scores: Map<string, number>;  // concern -> confidence_0_to_1
+    confidence_scores: Map<string, number>; // concern -> confidence_0_to_1
     risk_factors: string[];
     optimization_suggestions: OptimizationSuggestion[];
 }
 
 // Optimization Algorithm Results
 export interface OptimizationSuggestion {
-    type: 'ingredient_substitution' | 'concentration_adjustment' | 'ph_modification' | 
-          'stability_improvement' | 'cost_reduction' | 'synergy_enhancement';
+    type:
+        | 'ingredient_substitution'
+        | 'concentration_adjustment'
+        | 'ph_modification'
+        | 'stability_improvement'
+        | 'cost_reduction'
+        | 'synergy_enhancement';
     description: string;
     current_state: any;
     proposed_change: any;
@@ -188,10 +193,10 @@ export interface OptimizationSuggestion {
 }
 
 export interface FormulationImpact {
-    efficacy_change: number;    // -100 to +100%
-    safety_change: number;      // -100 to +100%
-    stability_change: number;   // -100 to +100%
-    cost_change: number;        // -100 to +100%
+    efficacy_change: number; // -100 to +100%
+    safety_change: number; // -100 to +100%
+    stability_change: number; // -100 to +100%
+    cost_change: number; // -100 to +100%
     market_appeal_change: number; // -100 to +100%
 }
 
@@ -232,8 +237,8 @@ export interface DegradationPathway {
 
 export interface StorageRequirement {
     parameter: string; // 'temperature', 'humidity', 'light', etc.
-    optimal_range: { min: number; max: number };
-    critical_threshold: { min: number; max: number };
+    optimal_range: {min: number; max: number};
+    critical_threshold: {min: number; max: number};
     monitoring_frequency: string;
 }
 
@@ -267,7 +272,7 @@ export interface PerformanceDataPoint {
     market_feedback: MarketFeedback;
     clinical_data: ClinicalDataPoint[];
     user_satisfaction: number; // 0-10 scale
-    repurchase_rate: number;   // 0-100%
+    repurchase_rate: number; // 0-100%
 }
 
 export interface MarketFeedback {
@@ -355,8 +360,13 @@ export interface HypergredientSystemConfig {
 // Event System for Real-time Updates
 export interface HypergredientEvent {
     event_id: string;
-    event_type: 'formulation_optimized' | 'ingredient_added' | 'performance_data_updated' | 
-               'regulatory_change' | 'market_trend_detected' | 'compatibility_warning';
+    event_type:
+        | 'formulation_optimized'
+        | 'ingredient_added'
+        | 'performance_data_updated'
+        | 'regulatory_change'
+        | 'market_trend_detected'
+        | 'compatibility_warning';
     timestamp: Date;
     data: any;
     source: string;

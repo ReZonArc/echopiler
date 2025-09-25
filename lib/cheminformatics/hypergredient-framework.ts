@@ -1,10 +1,10 @@
 /**
  * Hypergredient Framework - Revolutionary Formulation Design System
- * 
+ *
  * This implementation transforms cosmetic formulation design from art to science
  * through functional ingredient abstraction, multi-objective optimization,
  * and machine learning-enhanced performance prediction.
- * 
+ *
  * Key Features:
  * - Dynamic Hypergredient Database with 10+ functional classes
  * - Multi-objective optimization with constraint satisfaction
@@ -13,20 +13,17 @@
  * - Predictive performance modeling with confidence intervals
  */
 
+import type {CosmeticFormulation} from '../../types/cheminformatics/cosmetic-chemistry.interfaces.js';
 import type {
-    HypergredientClass,
-    HypergredientIngredient,
-    FormulationConstraints,
-    PerformancePrediction,
     CompatibilityAnalysis,
+    FormulationConstraints,
+    HypergredientClass,
     HypergredientDatabase,
+    HypergredientIngredient,
+    HypergredientScore,
     HypergredientSystemConfig,
-    HypergredientScore
+    PerformancePrediction,
 } from '../../types/cheminformatics/hypergredient-framework.interfaces.js';
-
-import type {
-    CosmeticFormulation
-} from '../../types/cheminformatics/cosmetic-chemistry.interfaces.js';
 
 export class HypergredientFramework {
     private database: HypergredientDatabase;
@@ -37,7 +34,7 @@ export class HypergredientFramework {
         this.config = this.initializeDefaultConfig(config);
         this.database = this.initializeDatabase();
         this.interactionMatrix = this.buildInteractionMatrix();
-        
+
         console.log('🧬 Hypergredient Framework initialized');
         console.log(`   📊 Database: ${this.database.hypergredients.size} ingredients`);
         console.log(`   🔗 Interactions: ${this.interactionMatrix.size} matrices`);
@@ -51,27 +48,27 @@ export class HypergredientFramework {
             optimization_weights: {
                 efficacy: 0.35,
                 safety: 0.25,
-                stability: 0.20,
+                stability: 0.2,
                 cost: 0.15,
-                synergy: 0.05
+                synergy: 0.05,
             },
             default_constraints: {
-                ph_range: { min: 4.5, max: 7.0 },
-                total_actives_range: { min: 5, max: 25 },
+                ph_range: {min: 4.5, max: 7.0},
+                total_actives_range: {min: 5, max: 25},
                 max_individual_concentration: 10.0,
                 budget_limit: 1500, // ZAR
                 skin_type_restrictions: [],
                 regulatory_regions: ['EU', 'FDA'],
                 exclude_ingredients: [],
-                required_functions: []
+                required_functions: [],
             },
             database_sync_frequency: 24, // hours
             performance_tracking: true,
             evolutionary_learning: true,
-            real_time_compatibility: true
+            real_time_compatibility: true,
         };
 
-        return { ...defaultConfig, ...userConfig };
+        return {...defaultConfig, ...userConfig};
     }
 
     /**
@@ -99,13 +96,16 @@ export class HypergredientFramework {
                 potency_rating: 10,
                 onset_time_weeks: 2,
                 duration_months: 6,
-                evidence_strength: 'clinical'
+                evidence_strength: 'clinical',
             },
             interaction_profile: {
                 synergy_partners: new Map([['niacinamide', 1.2]]),
                 antagonistic_pairs: new Map([['benzoyl_peroxide', 2.5]]),
-                ph_dependencies: new Map([['5.5', 0.9], ['6.5', 1.0]]),
-                concentration_dependencies: new Map()
+                ph_dependencies: new Map([
+                    ['5.5', 0.9],
+                    ['6.5', 1.0],
+                ]),
+                concentration_dependencies: new Map(),
             },
             optimization_parameters: {
                 weight_efficacy: 1.0,
@@ -115,10 +115,13 @@ export class HypergredientFramework {
                 weight_synergy: 0.7,
                 constraint_min_concentration: 0.025,
                 constraint_max_concentration: 0.1,
-                constraint_ph_range: { min: 5.5, max: 6.5 }
+                constraint_ph_range: {min: 5.5, max: 6.5},
             },
-            cost_per_gram: 15.00,
-            regulatory_status: new Map([['EU', 'prescription'], ['FDA', 'prescription']])
+            cost_per_gram: 15.0,
+            regulatory_status: new Map([
+                ['EU', 'prescription'],
+                ['FDA', 'prescription'],
+            ]),
         });
 
         this.addHypergredient(hypergredients, {
@@ -139,13 +142,19 @@ export class HypergredientFramework {
                 potency_rating: 7,
                 onset_time_weeks: 4,
                 duration_months: 6,
-                evidence_strength: 'clinical'
+                evidence_strength: 'clinical',
             },
             interaction_profile: {
-                synergy_partners: new Map([['vitamin_e', 1.8], ['resveratrol', 1.5]]),
+                synergy_partners: new Map([
+                    ['vitamin_e', 1.8],
+                    ['resveratrol', 1.5],
+                ]),
                 antagonistic_pairs: new Map(),
-                ph_dependencies: new Map([['4.0', 1.0], ['9.0', 1.0]]),
-                concentration_dependencies: new Map()
+                ph_dependencies: new Map([
+                    ['4.0', 1.0],
+                    ['9.0', 1.0],
+                ]),
+                concentration_dependencies: new Map(),
             },
             optimization_parameters: {
                 weight_efficacy: 0.8,
@@ -155,10 +164,13 @@ export class HypergredientFramework {
                 weight_synergy: 0.9,
                 constraint_min_concentration: 0.5,
                 constraint_max_concentration: 2.0,
-                constraint_ph_range: { min: 4.0, max: 9.0 }
+                constraint_ph_range: {min: 4.0, max: 9.0},
             },
-            cost_per_gram: 240.00,
-            regulatory_status: new Map([['EU', 'approved'], ['FDA', 'approved']])
+            cost_per_gram: 240.0,
+            regulatory_status: new Map([
+                ['EU', 'approved'],
+                ['FDA', 'approved'],
+            ]),
         });
 
         // H.CS - Collagen Synthesis Promoters
@@ -180,13 +192,19 @@ export class HypergredientFramework {
                 potency_rating: 9,
                 onset_time_weeks: 4,
                 duration_months: 6,
-                evidence_strength: 'clinical'
+                evidence_strength: 'clinical',
             },
             interaction_profile: {
-                synergy_partners: new Map([['vitamin_c', 2.0], ['hyaluronic_acid', 1.5]]),
+                synergy_partners: new Map([
+                    ['vitamin_c', 2.0],
+                    ['hyaluronic_acid', 1.5],
+                ]),
                 antagonistic_pairs: new Map(),
-                ph_dependencies: new Map([['5.0', 1.0], ['7.0', 1.0]]),
-                concentration_dependencies: new Map()
+                ph_dependencies: new Map([
+                    ['5.0', 1.0],
+                    ['7.0', 1.0],
+                ]),
+                concentration_dependencies: new Map(),
             },
             optimization_parameters: {
                 weight_efficacy: 1.0,
@@ -196,10 +214,13 @@ export class HypergredientFramework {
                 weight_synergy: 1.0,
                 constraint_min_concentration: 1.0,
                 constraint_max_concentration: 5.0,
-                constraint_ph_range: { min: 5.0, max: 7.0 }
+                constraint_ph_range: {min: 5.0, max: 7.0},
             },
-            cost_per_gram: 120.00,
-            regulatory_status: new Map([['EU', 'approved'], ['FDA', 'approved']])
+            cost_per_gram: 120.0,
+            regulatory_status: new Map([
+                ['EU', 'approved'],
+                ['FDA', 'approved'],
+            ]),
         });
 
         // H.AO - Antioxidant Systems
@@ -221,13 +242,19 @@ export class HypergredientFramework {
                 potency_rating: 10,
                 onset_time_weeks: 2,
                 duration_months: 3,
-                evidence_strength: 'clinical'
+                evidence_strength: 'clinical',
             },
             interaction_profile: {
-                synergy_partners: new Map([['vitamin_e', 2.5], ['resveratrol', 2.0]]),
+                synergy_partners: new Map([
+                    ['vitamin_e', 2.5],
+                    ['resveratrol', 2.0],
+                ]),
                 antagonistic_pairs: new Map(),
-                ph_dependencies: new Map([['5.0', 0.8], ['7.0', 1.0]]),
-                concentration_dependencies: new Map()
+                ph_dependencies: new Map([
+                    ['5.0', 0.8],
+                    ['7.0', 1.0],
+                ]),
+                concentration_dependencies: new Map(),
             },
             optimization_parameters: {
                 weight_efficacy: 1.0,
@@ -237,10 +264,13 @@ export class HypergredientFramework {
                 weight_synergy: 1.0,
                 constraint_min_concentration: 0.1,
                 constraint_max_concentration: 1.0,
-                constraint_ph_range: { min: 5.0, max: 8.0 }
+                constraint_ph_range: {min: 5.0, max: 8.0},
             },
-            cost_per_gram: 360.00,
-            regulatory_status: new Map([['EU', 'approved'], ['FDA', 'approved']])
+            cost_per_gram: 360.0,
+            regulatory_status: new Map([
+                ['EU', 'approved'],
+                ['FDA', 'approved'],
+            ]),
         });
 
         // H.HY - Hydration Systems
@@ -262,13 +292,19 @@ export class HypergredientFramework {
                 potency_rating: 8,
                 onset_time_weeks: 1,
                 duration_months: 2,
-                evidence_strength: 'clinical'
+                evidence_strength: 'clinical',
             },
             interaction_profile: {
-                synergy_partners: new Map([['ceramides', 2.2], ['peptides', 1.8]]),
+                synergy_partners: new Map([
+                    ['ceramides', 2.2],
+                    ['peptides', 1.8],
+                ]),
                 antagonistic_pairs: new Map(),
-                ph_dependencies: new Map([['3.0', 1.0], ['8.0', 1.0]]),
-                concentration_dependencies: new Map()
+                ph_dependencies: new Map([
+                    ['3.0', 1.0],
+                    ['8.0', 1.0],
+                ]),
+                concentration_dependencies: new Map(),
             },
             optimization_parameters: {
                 weight_efficacy: 0.9,
@@ -278,10 +314,13 @@ export class HypergredientFramework {
                 weight_synergy: 0.9,
                 constraint_min_concentration: 0.1,
                 constraint_max_concentration: 2.0,
-                constraint_ph_range: { min: 3.0, max: 8.0 }
+                constraint_ph_range: {min: 3.0, max: 8.0},
             },
-            cost_per_gram: 85.00,
-            regulatory_status: new Map([['EU', 'approved'], ['FDA', 'approved']])
+            cost_per_gram: 85.0,
+            regulatory_status: new Map([
+                ['EU', 'approved'],
+                ['FDA', 'approved'],
+            ]),
         });
 
         return {
@@ -294,12 +333,15 @@ export class HypergredientFramework {
                 emerging_concerns: [],
                 regulatory_landscape: [],
                 consumer_preferences: [],
-                pricing_trends: []
-            }
+                pricing_trends: [],
+            },
         };
     }
 
-    private addHypergredient(map: Map<string, HypergredientIngredient>, ingredient: Partial<HypergredientIngredient>): void {
+    private addHypergredient(
+        map: Map<string, HypergredientIngredient>,
+        ingredient: Partial<HypergredientIngredient>,
+    ): void {
         const fullIngredient: HypergredientIngredient = {
             // Default values
             molecularWeight: undefined,
@@ -315,9 +357,9 @@ export class HypergredientFramework {
             stability_factors: undefined,
             evidence_level: undefined,
             sensitive_properties: undefined,
-            ...ingredient as HypergredientIngredient
+            ...(ingredient as HypergredientIngredient),
         };
-        
+
         map.set(ingredient.id!, fullIngredient);
     }
 
@@ -330,20 +372,20 @@ export class HypergredientFramework {
         // Define interaction coefficients
         const interactions: Array<[string, string, number]> = [
             // Positive synergies
-            ['H.CT', 'H.CS', 1.5],    // Cellular turnover + Collagen synthesis
-            ['H.CS', 'H.AO', 2.0],    // Collagen synthesis + Antioxidants
-            ['H.BR', 'H.HY', 2.5],    // Barrier repair + Hydration
-            ['H.ML', 'H.AO', 1.8],    // Melanin modulators + Antioxidants
-            ['H.AI', 'H.MB', 2.2],    // Anti-inflammatory + Microbiome
-            ['H.HY', 'H.CS', 1.7],    // Hydration + Collagen synthesis
-            
+            ['H.CT', 'H.CS', 1.5], // Cellular turnover + Collagen synthesis
+            ['H.CS', 'H.AO', 2.0], // Collagen synthesis + Antioxidants
+            ['H.BR', 'H.HY', 2.5], // Barrier repair + Hydration
+            ['H.ML', 'H.AO', 1.8], // Melanin modulators + Antioxidants
+            ['H.AI', 'H.MB', 2.2], // Anti-inflammatory + Microbiome
+            ['H.HY', 'H.CS', 1.7], // Hydration + Collagen synthesis
+
             // Mild antagonisms
-            ['H.CT', 'H.AO', 0.8],    // Some cellular turnover agents + antioxidants
-            ['H.SE', 'H.CT', 0.6],    // Sebum regulators + some cellular turnover
-            
+            ['H.CT', 'H.AO', 0.8], // Some cellular turnover agents + antioxidants
+            ['H.SE', 'H.CT', 0.6], // Sebum regulators + some cellular turnover
+
             // Neutral interactions (coefficient = 1.0)
             ['H.PD', 'H.HY', 1.0],
-            ['H.BR', 'H.AI', 1.0]
+            ['H.BR', 'H.AI', 1.0],
         ];
 
         // Build the matrix
@@ -354,7 +396,7 @@ export class HypergredientFramework {
             if (!matrix.has(class2)) {
                 matrix.set(class2, new Map());
             }
-            
+
             matrix.get(class1)!.set(class2, coefficient);
             matrix.get(class2)!.set(class1, coefficient); // Symmetric
         }
@@ -368,7 +410,7 @@ export class HypergredientFramework {
     public optimizeFormulation(
         targetConcerns: string[],
         constraints: Partial<FormulationConstraints> = {},
-        skinType: string = 'normal'
+        skinType: string = 'normal',
     ): {
         formulation: CosmeticFormulation;
         analysis: CompatibilityAnalysis;
@@ -382,7 +424,7 @@ export class HypergredientFramework {
         // Merge constraints with defaults
         const fullConstraints: FormulationConstraints = {
             ...this.config.default_constraints,
-            ...constraints
+            ...constraints,
         };
 
         // Step 1: Map concerns to hypergredient classes
@@ -406,7 +448,7 @@ export class HypergredientFramework {
 
         console.log(`   ✨ Optimization complete - Score: ${score.composite_score.toFixed(2)}/10`);
 
-        return { formulation, analysis, prediction, score };
+        return {formulation, analysis, prediction, score};
     }
 
     /**
@@ -428,15 +470,17 @@ export class HypergredientFramework {
             ['oily_skin', ['H.SE']],
             ['acne', ['H.CT', 'H.SE', 'H.AI']],
             ['barrier_damage', ['H.BR', 'H.AI']],
-            ['environmental_damage', ['H.AO']]
+            ['environmental_damage', ['H.AO']],
         ]);
 
         const targetClasses = new Set<HypergredientClass>();
-        
+
         for (const concern of concerns) {
             const classes = classMapping.get(concern.toLowerCase());
             if (classes) {
-                classes.forEach(cls => targetClasses.add(cls));
+                for (const cls of classes) {
+                    targetClasses.add(cls);
+                }
             }
         }
 
@@ -453,7 +497,7 @@ export class HypergredientFramework {
      */
     private selectOptimalIngredients(
         targetClasses: Set<HypergredientClass>,
-        constraints: FormulationConstraints
+        constraints: FormulationConstraints,
     ): HypergredientIngredient[] {
         const selectedIngredients: HypergredientIngredient[] = [];
 
@@ -468,7 +512,7 @@ export class HypergredientFramework {
             // Score candidates
             const scoredCandidates = candidates.map(candidate => ({
                 ingredient: candidate,
-                score: this.calculateIngredientScore(candidate, constraints)
+                score: this.calculateIngredientScore(candidate, constraints),
             }));
 
             // Select best candidate
@@ -482,20 +526,17 @@ export class HypergredientFramework {
     /**
      * Calculate individual ingredient score
      */
-    private calculateIngredientScore(
-        ingredient: HypergredientIngredient,
-        constraints: FormulationConstraints
-    ): number {
+    private calculateIngredientScore(ingredient: HypergredientIngredient, constraints: FormulationConstraints): number {
         const metrics = ingredient.hypergredient_metrics;
         const weights = this.config.optimization_weights;
 
         // Base performance score
-        let score = (
-            (metrics.efficacy_score / 10) * weights.efficacy +
-            (metrics.safety_profile / 10) * weights.safety +
-            (metrics.stability_index / 10) * weights.stability +
-            ((100 - metrics.cost_efficiency) / 100) * weights.cost
-        ) * 10;
+        let score =
+            ((metrics.efficacy_score / 10) * weights.efficacy +
+                (metrics.safety_profile / 10) * weights.safety +
+                (metrics.stability_index / 10) * weights.stability +
+                ((100 - metrics.cost_efficiency) / 100) * weights.cost) *
+            10;
 
         // Apply constraint penalties
         if (ingredient.cost_per_gram && ingredient.cost_per_gram > constraints.budget_limit / 50) {
@@ -503,8 +544,10 @@ export class HypergredientFramework {
         }
 
         // Regulatory compliance bonus
-        if (ingredient.regulatory_status?.get('EU') === 'approved' && 
-            ingredient.regulatory_status?.get('FDA') === 'approved') {
+        if (
+            ingredient.regulatory_status?.get('EU') === 'approved' &&
+            ingredient.regulatory_status?.get('FDA') === 'approved'
+        ) {
             score *= 1.1;
         }
 
@@ -516,24 +559,21 @@ export class HypergredientFramework {
      */
     private optimizeConcentrations(
         ingredients: HypergredientIngredient[],
-        constraints: FormulationConstraints
+        constraints: FormulationConstraints,
     ): Map<string, number> {
         const concentrations = new Map<string, number>();
         let totalActives = 0;
 
         // Sort ingredients by efficacy for priority allocation
         const sortedIngredients = [...ingredients].sort(
-            (a, b) => b.hypergredient_metrics.efficacy_score - a.hypergredient_metrics.efficacy_score
+            (a, b) => b.hypergredient_metrics.efficacy_score - a.hypergredient_metrics.efficacy_score,
         );
 
         for (const ingredient of sortedIngredients) {
             const params = ingredient.optimization_parameters;
-            
+
             // Calculate optimal concentration
-            let optimalConc = Math.min(
-                params.constraint_max_concentration,
-                constraints.max_individual_concentration
-            );
+            let optimalConc = Math.min(params.constraint_max_concentration, constraints.max_individual_concentration);
 
             // Adjust based on remaining budget for total actives
             const remainingBudget = constraints.total_actives_range.max - totalActives;
@@ -561,14 +601,14 @@ export class HypergredientFramework {
      */
     private createFormulation(
         ingredients: HypergredientIngredient[],
-        concentrations: Map<string, number>
+        concentrations: Map<string, number>,
     ): CosmeticFormulation {
         // Calculate total cost
         let totalCost = 0;
         for (const ingredient of ingredients) {
             const concentration = concentrations.get(ingredient.id) || 0;
             if (ingredient.cost_per_gram) {
-                totalCost += (ingredient.cost_per_gram * concentration / 100); // Cost per 100g formulation
+                totalCost += (ingredient.cost_per_gram * concentration) / 100; // Cost per 100g formulation
             }
         }
 
@@ -580,12 +620,15 @@ export class HypergredientFramework {
             concentrations,
             total_cost: totalCost,
             ph_target: 5.5,
-            target_properties: ingredients.flatMap(ing => 
-                ing.functions.map(func => ({ name: func, value: 'optimized', unit: 'boolean' }))
+            target_properties: ingredients.flatMap(ing =>
+                ing.functions.map(func => ({name: func, value: 'optimized', unit: 'boolean'})),
             ),
-            regulatory_approvals: new Map([['EU', 'pending'], ['FDA', 'pending']]),
+            regulatory_approvals: new Map([
+                ['EU', 'pending'],
+                ['FDA', 'pending'],
+            ]),
             creation_date: new Date(),
-            last_modified: new Date()
+            last_modified: new Date(),
         };
     }
 
@@ -602,10 +645,10 @@ export class HypergredientFramework {
             for (let j = i + 1; j < ingredients.length; j++) {
                 const ingA = ingredients[i];
                 const ingB = ingredients[j];
-                
+
                 const compatibility = this.checkPairCompatibility(ingA, ingB);
                 pairs.push(compatibility);
-                
+
                 if (compatibility.compatibility_score < 70) {
                     overallScore -= 10;
                     warnings.push({
@@ -613,15 +656,14 @@ export class HypergredientFramework {
                         ingredients_involved: [ingA.id, ingB.id],
                         warning_message: `Potential compatibility issue between ${ingA.name} and ${ingB.name}`,
                         potential_consequences: ['Reduced stability', 'Decreased efficacy'],
-                        recommended_actions: ['Monitor pH compatibility', 'Consider sequential application']
+                        recommended_actions: ['Monitor pH compatibility', 'Consider sequential application'],
                     });
                 }
             }
         }
 
-        const overallCompatibility = overallScore >= 90 ? 'excellent' : 
-                                   overallScore >= 80 ? 'good' : 
-                                   overallScore >= 70 ? 'fair' : 'poor';
+        const overallCompatibility =
+            overallScore >= 90 ? 'excellent' : overallScore >= 80 ? 'good' : overallScore >= 70 ? 'fair' : 'poor';
 
         return {
             ingredient_pairs: pairs,
@@ -631,10 +673,10 @@ export class HypergredientFramework {
                 shelf_life_months: Math.max(12, Math.floor(overallScore / 4)),
                 degradation_pathways: [],
                 storage_requirements: [],
-                stability_testing_recommendations: []
+                stability_testing_recommendations: [],
             },
             interaction_warnings: warnings,
-            optimization_opportunities: []
+            optimization_opportunities: [],
         };
     }
 
@@ -683,7 +725,7 @@ export class HypergredientFramework {
             ph_sensitivity: !phCompatible,
             concentration_sensitivity: false,
             temperature_sensitivity: false,
-            mechanism_description: `${ingA.hypergredient_class} + ${ingB.hypergredient_class} interaction`
+            mechanism_description: `${ingA.hypergredient_class} + ${ingB.hypergredient_class} interaction`,
         };
     }
 
@@ -701,10 +743,7 @@ export class HypergredientFramework {
     /**
      * Predict formulation performance
      */
-    private predictPerformance(
-        formulation: CosmeticFormulation,
-        targetConcerns: string[]
-    ): PerformancePrediction {
+    private predictPerformance(formulation: CosmeticFormulation, targetConcerns: string[]): PerformancePrediction {
         const predictedEfficacy = new Map<string, number>();
         const predictedTimeline = new Map<string, number>();
         const confidenceScores = new Map<string, number>();
@@ -721,17 +760,17 @@ export class HypergredientFramework {
                 if (concernRelevance > 0) {
                     const concentration = formulation.concentrations.get(ingredient.id) || 0;
                     const weight = concentration * concernRelevance;
-                    
+
                     totalEfficacy += hypergredientIngredient.hypergredient_metrics.efficacy_score * weight;
                     totalWeight += weight;
-                    
+
                     minWeeks = Math.min(minWeeks, hypergredientIngredient.hypergredient_metrics.onset_time_weeks);
                 }
             }
 
             const avgEfficacy = totalWeight > 0 ? totalEfficacy / totalWeight : 0;
             const predictedImprovement = Math.min(85, avgEfficacy * 8.5); // Max 85% improvement
-            
+
             predictedEfficacy.set(concern, predictedImprovement);
             predictedTimeline.set(concern, minWeeks === Infinity ? 4 : minWeeks);
             confidenceScores.set(concern, Math.min(0.9, totalWeight / 10));
@@ -743,7 +782,7 @@ export class HypergredientFramework {
             predicted_timeline: predictedTimeline,
             confidence_scores: confidenceScores,
             risk_factors: [],
-            optimization_suggestions: []
+            optimization_suggestions: [],
         };
     }
 
@@ -755,13 +794,13 @@ export class HypergredientFramework {
             ['wrinkles', ['collagen_synthesis', 'cellular_turnover', 'anti_aging']],
             ['hydration', ['hydration', 'water_binding', 'moisture_retention']],
             ['brightness', ['melanin_inhibition', 'brightening', 'antioxidant']],
-            ['firmness', ['collagen_synthesis', 'firming', 'elasticity_improvement']]
+            ['firmness', ['collagen_synthesis', 'firming', 'elasticity_improvement']],
             // Add more mappings as needed
         ]);
 
         const relevantFunctions = relevanceMap.get(concern.toLowerCase()) || [];
-        const matchingFunctions = ingredient.functions.filter(func => 
-            relevantFunctions.some(rel => func.includes(rel))
+        const matchingFunctions = ingredient.functions.filter(func =>
+            relevantFunctions.some(rel => func.includes(rel)),
         );
 
         return matchingFunctions.length / relevantFunctions.length;
@@ -772,10 +811,10 @@ export class HypergredientFramework {
      */
     private calculateFormulationScore(
         formulation: CosmeticFormulation,
-        constraints: FormulationConstraints
+        constraints: FormulationConstraints,
     ): HypergredientScore {
         const weights = this.config.optimization_weights;
-        
+
         // Calculate individual scores
         let efficacy = 0;
         let bioavailability = 0;
@@ -788,7 +827,7 @@ export class HypergredientFramework {
             const hypergredientIngredient = ingredient as HypergredientIngredient;
             const concentration = formulation.concentrations.get(ingredient.id) || 0;
             const weight = concentration / 100;
-            
+
             efficacy += hypergredientIngredient.hypergredient_metrics.efficacy_score * weight;
             bioavailability += hypergredientIngredient.hypergredient_metrics.bioavailability * weight;
             stability += hypergredientIngredient.hypergredient_metrics.stability_index * weight;
@@ -813,13 +852,15 @@ export class HypergredientFramework {
         const constraintPenalties = this.calculateConstraintPenalties(formulation, constraints);
 
         // Composite score
-        const compositeScore = (
-            (efficacy / 10) * weights.efficacy +
-            (bioavailability / 100) * weights.stability +
-            (stability / 10) * weights.stability +
-            (safety / 10) * weights.safety +
-            (costEfficiency / 10) * weights.cost
-        ) * 10 + networkBonus - constraintPenalties;
+        const compositeScore =
+            ((efficacy / 10) * weights.efficacy +
+                (bioavailability / 100) * weights.stability +
+                (stability / 10) * weights.stability +
+                (safety / 10) * weights.safety +
+                (costEfficiency / 10) * weights.cost) *
+                10 +
+            networkBonus -
+            constraintPenalties;
 
         return {
             composite_score: Math.max(0, Math.min(10, compositeScore)),
@@ -828,11 +869,11 @@ export class HypergredientFramework {
                 bioavailability: bioavailability / 100,
                 stability: stability / 10,
                 safety: safety / 10,
-                cost_efficiency: costEfficiency / 10
+                cost_efficiency: costEfficiency / 10,
             },
             network_bonus: networkBonus,
             constraint_penalties: constraintPenalties,
-            confidence_interval: { min: compositeScore * 0.9, max: compositeScore * 1.1 }
+            confidence_interval: {min: compositeScore * 0.9, max: compositeScore * 1.1},
         };
     }
 
@@ -847,13 +888,14 @@ export class HypergredientFramework {
             for (let j = i + 1; j < ingredients.length; j++) {
                 const ingA = ingredients[i];
                 const ingB = ingredients[j];
-                
+
                 // Check class-level synergy
-                const classBonus = this.interactionMatrix.get(ingA.hypergredient_class)?.get(ingB.hypergredient_class) || 1.0;
+                const classBonus =
+                    this.interactionMatrix.get(ingA.hypergredient_class)?.get(ingB.hypergredient_class) || 1.0;
                 if (classBonus > 1.0) {
                     bonus += (classBonus - 1.0) * 0.2;
                 }
-                
+
                 // Check ingredient-level synergy
                 const synergyScore = ingA.interaction_profile.synergy_partners.get(ingB.id) || 0;
                 if (synergyScore > 1.0) {
@@ -870,7 +912,7 @@ export class HypergredientFramework {
      */
     private calculateConstraintPenalties(
         formulation: CosmeticFormulation,
-        constraints: FormulationConstraints
+        constraints: FormulationConstraints,
     ): number {
         let penalties = 0;
 
@@ -906,18 +948,18 @@ export class HypergredientFramework {
         const stats = {
             total_ingredients: this.database.hypergredients.size,
             ingredients_by_class: new Map<HypergredientClass, number>(),
-            avg_efficacy_by_class: new Map<HypergredientClass, number>()
+            avg_efficacy_by_class: new Map<HypergredientClass, number>(),
         };
 
         // Count by class and calculate averages
         const classEfficacies = new Map<HypergredientClass, number[]>();
-        
+
         for (const ingredient of this.database.hypergredients.values()) {
             const hClass = ingredient.hypergredient_class;
-            
+
             // Count
             stats.ingredients_by_class.set(hClass, (stats.ingredients_by_class.get(hClass) || 0) + 1);
-            
+
             // Efficacy collection
             if (!classEfficacies.has(hClass)) {
                 classEfficacies.set(hClass, []);

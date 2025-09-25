@@ -1,11 +1,11 @@
 /**
  * Multiscale Constraint Optimization Engine for Cosmeceutical Formulation
- * 
+ *
  * This module implements the core multiscale optimization engine that integrates
  * OpenCog-inspired reasoning with cosmeceutical formulation constraints. It addresses
  * simultaneous local and global optimization problems across different skin model
  * scales while maintaining regulatory compliance and maximizing therapeutic synergy.
- * 
+ *
  * Key Features:
  * - Hypergraph-based ingredient and action ontology encoding
  * - Symbolic and sub-symbolic optimization routines
@@ -14,9 +14,13 @@
  * - Integration with INCI search space reduction and attention allocation
  */
 
-import {CosmeticIngredient, CosmeticFormulation} from '../../types/cheminformatics/cosmetic-chemistry.interfaces.js';
-import {INCISearchSpaceReducer, SearchSpaceReductionConfig, MultiscaleOptimizationResult} from './inci-search-space-reducer.js';
+import {CosmeticFormulation, CosmeticIngredient} from '../../types/cheminformatics/cosmetic-chemistry.interfaces.js';
 import {AdaptiveAttentionAllocator, AttentionDistribution} from './adaptive-attention-allocator.js';
+import {
+    INCISearchSpaceReducer,
+    MultiscaleOptimizationResult,
+    SearchSpaceReductionConfig,
+} from './inci-search-space-reducer.js';
 
 export interface SkinLayer {
     name: string;
@@ -149,11 +153,11 @@ export class MultiscaleOptimizer {
                 barrier_properties: {
                     lipophilicity_requirement: 0.7,
                     molecular_weight_limit: 500,
-                    ph_tolerance: {min: 4.5, max: 6.5}
+                    ph_tolerance: {min: 4.5, max: 6.5},
                 },
                 therapeutic_targets: ['barrier_function', 'hydration', 'desquamation'],
                 penetration_enhancers: ['urea', 'lactic_acid', 'ceramides'],
-                metabolic_activity: 0.1
+                metabolic_activity: 0.1,
             },
             {
                 name: 'viable_epidermis',
@@ -161,11 +165,11 @@ export class MultiscaleOptimizer {
                 barrier_properties: {
                     lipophilicity_requirement: 0.5,
                     molecular_weight_limit: 1000,
-                    ph_tolerance: {min: 5.5, max: 7.5}
+                    ph_tolerance: {min: 5.5, max: 7.5},
                 },
                 therapeutic_targets: ['cell_turnover', 'pigmentation', 'inflammation'],
                 penetration_enhancers: ['glycolic_acid', 'retinoids', 'niacinamide'],
-                metabolic_activity: 0.8
+                metabolic_activity: 0.8,
             },
             {
                 name: 'papillary_dermis',
@@ -173,11 +177,11 @@ export class MultiscaleOptimizer {
                 barrier_properties: {
                     lipophilicity_requirement: 0.3,
                     molecular_weight_limit: 5000,
-                    ph_tolerance: {min: 6.0, max: 8.0}
+                    ph_tolerance: {min: 6.0, max: 8.0},
                 },
                 therapeutic_targets: ['collagen_synthesis', 'elastin_production', 'angiogenesis'],
                 penetration_enhancers: ['peptides', 'growth_factors', 'microneedling'],
-                metabolic_activity: 0.9
+                metabolic_activity: 0.9,
             },
             {
                 name: 'reticular_dermis',
@@ -185,12 +189,12 @@ export class MultiscaleOptimizer {
                 barrier_properties: {
                     lipophilicity_requirement: 0.2,
                     molecular_weight_limit: 10000,
-                    ph_tolerance: {min: 6.5, max: 7.8}
+                    ph_tolerance: {min: 6.5, max: 7.8},
                 },
                 therapeutic_targets: ['structural_support', 'wound_healing', 'tissue_remodeling'],
                 penetration_enhancers: ['injectable_delivery', 'iontophoresis', 'ultrasound'],
-                metabolic_activity: 0.6
-            }
+                metabolic_activity: 0.6,
+            },
         ];
 
         layers.forEach(layer => {
@@ -213,18 +217,18 @@ export class MultiscaleOptimizer {
                 concentration_response: {
                     ec50: 0.5, // % concentration
                     hill_coefficient: 2.0,
-                    max_effect: 0.85
+                    max_effect: 0.85,
                 },
                 time_course: {
                     onset_hours: 72,
                     peak_hours: 168,
-                    duration_hours: 336
+                    duration_hours: 336,
                 },
                 synergy_potential: new Map([
                     ['vitamin_c', 0.8],
                     ['peptides', 0.9],
-                    ['retinoids', 0.7]
-                ])
+                    ['retinoids', 0.7],
+                ]),
             },
             {
                 id: 'barrier_enhancement',
@@ -236,18 +240,18 @@ export class MultiscaleOptimizer {
                 concentration_response: {
                     ec50: 2.0,
                     hill_coefficient: 1.5,
-                    max_effect: 0.9
+                    max_effect: 0.9,
                 },
                 time_course: {
                     onset_hours: 4,
                     peak_hours: 24,
-                    duration_hours: 72
+                    duration_hours: 72,
                 },
                 synergy_potential: new Map([
                     ['ceramides', 0.9],
                     ['cholesterol', 0.8],
-                    ['fatty_acids', 0.7]
-                ])
+                    ['fatty_acids', 0.7],
+                ]),
             },
             {
                 id: 'melanin_inhibition',
@@ -259,19 +263,19 @@ export class MultiscaleOptimizer {
                 concentration_response: {
                     ec50: 1.0,
                     hill_coefficient: 1.8,
-                    max_effect: 0.75
+                    max_effect: 0.75,
                 },
                 time_course: {
                     onset_hours: 48,
                     peak_hours: 120,
-                    duration_hours: 240
+                    duration_hours: 240,
                 },
                 synergy_potential: new Map([
                     ['niacinamide', 0.8],
                     ['arbutin', 0.7],
-                    ['kojic_acid', 0.6]
-                ])
-            }
+                    ['kojic_acid', 0.6],
+                ]),
+            },
         ];
 
         actions.forEach(action => {
@@ -291,7 +295,7 @@ export class MultiscaleOptimizer {
                 hard_constraint: true,
                 scope: 'global',
                 description: 'Total active ingredient concentration must not exceed safe limits',
-                evaluation_function: this.evaluateTotalActivesConstraint.bind(this)
+                evaluation_function: this.evaluateTotalActivesConstraint.bind(this),
             },
             {
                 id: 'ingredient_compatibility',
@@ -300,7 +304,7 @@ export class MultiscaleOptimizer {
                 hard_constraint: true,
                 scope: 'global',
                 description: 'All ingredients must be chemically compatible',
-                evaluation_function: this.evaluateCompatibilityConstraint.bind(this)
+                evaluation_function: this.evaluateCompatibilityConstraint.bind(this),
             },
             {
                 id: 'regulatory_compliance',
@@ -309,7 +313,7 @@ export class MultiscaleOptimizer {
                 hard_constraint: true,
                 scope: 'global',
                 description: 'All ingredients must comply with regulatory requirements',
-                evaluation_function: this.evaluateRegulatoryConstraint.bind(this)
+                evaluation_function: this.evaluateRegulatoryConstraint.bind(this),
             },
             {
                 id: 'cost_effectiveness',
@@ -318,7 +322,7 @@ export class MultiscaleOptimizer {
                 hard_constraint: false,
                 scope: 'global',
                 description: 'Formulation cost should be within budget constraints',
-                evaluation_function: this.evaluateCostConstraint.bind(this)
+                evaluation_function: this.evaluateCostConstraint.bind(this),
             },
             {
                 id: 'therapeutic_synergy',
@@ -327,8 +331,8 @@ export class MultiscaleOptimizer {
                 hard_constraint: false,
                 scope: 'multiscale',
                 description: 'Ingredients should exhibit synergistic therapeutic effects',
-                evaluation_function: this.evaluateSynergyConstraint.bind(this)
-            }
+                evaluation_function: this.evaluateSynergyConstraint.bind(this),
+            },
         ];
 
         constraints.forEach(constraint => {
@@ -342,7 +346,7 @@ export class MultiscaleOptimizer {
     public async optimizeFormulation(
         targetOutcomes: string[],
         context: OptimizationContext,
-        config: MultiscaleOptimizationConfig
+        config: MultiscaleOptimizationConfig,
     ): Promise<OptimizationResult> {
         console.log('Starting multiscale cosmeceutical formulation optimization...');
 
@@ -354,23 +358,19 @@ export class MultiscaleOptimizer {
             skin_penetration_requirements: ['stratum_corneum', 'viable_epidermis'],
             stability_requirements: ['oxidation_resistant', 'ph_stable'],
             cost_constraints: context.budget_constraints,
-            regulatory_regions: context.regulatory_regions
+            regulatory_regions: context.regulatory_regions,
         };
 
         const searchSpaceResult = await this.searchSpaceReducer.reduceSearchSpace(
             {type: 'SKINCARE_FORMULATION'}, // Target formulation
-            searchConfig
+            searchConfig,
         );
 
         // Step 2: Update attention allocation
         const attentionDistribution = this.attentionAllocator.allocateAttention();
-        
+
         // Step 3: Initialize formulation with most promising ingredients
-        let currentFormulation = this.initializeFormulation(
-            searchSpaceResult,
-            attentionDistribution,
-            context
-        );
+        const currentFormulation = this.initializeFormulation(searchSpaceResult, attentionDistribution, context);
 
         // Step 4: Iterative optimization
         const optimizationTrace: OptimizationStep[] = [];
@@ -384,7 +384,7 @@ export class MultiscaleOptimizer {
                 searchSpaceResult,
                 context,
                 config,
-                iterations
+                iterations,
             );
 
             optimizationTrace.push(step);
@@ -398,7 +398,7 @@ export class MultiscaleOptimizer {
             this.attentionAllocator.reinforceAttention(
                 `formulation_${iterations}`,
                 step.score_after > step.score_before,
-                step.score_after - step.score_before
+                step.score_after - step.score_before,
             );
 
             // Check convergence
@@ -411,12 +411,7 @@ export class MultiscaleOptimizer {
         }
 
         // Step 5: Final evaluation and analysis
-        const finalResult = await this.generateFinalResult(
-            bestFormulation,
-            context,
-            optimizationTrace,
-            iterations
-        );
+        const finalResult = await this.generateFinalResult(bestFormulation, context, optimizationTrace, iterations);
 
         console.log(`Optimization completed. Final score: ${finalResult.optimization_score}`);
         return finalResult;
@@ -428,7 +423,7 @@ export class MultiscaleOptimizer {
     private initializeFormulation(
         searchSpaceResult: MultiscaleOptimizationResult,
         attentionDistribution: AttentionDistribution,
-        context: OptimizationContext
+        context: OptimizationContext,
     ): CosmeticFormulation {
         const formulation: CosmeticFormulation = {
             id: `optimized_${Date.now()}`,
@@ -445,24 +440,26 @@ export class MultiscaleOptimizer {
                     {factor: 'temperature_stability', risk_level: 'low'},
                     {factor: 'light_sensitivity', risk_level: 'medium'},
                     {factor: 'microbial_growth', risk_level: 'low'},
-                    {factor: 'oxidation_risk', risk_level: 'medium'}
+                    {factor: 'oxidation_risk', risk_level: 'medium'},
                 ],
                 shelf_life_estimate: 24,
-                storage_conditions: [{
-                    temperature_range: {min: 5, max: 25},
-                    light_protection: true
-                }],
-                stability_rating: 'good'
+                storage_conditions: [
+                    {
+                        temperature_range: {min: 5, max: 25},
+                        light_protection: true,
+                    },
+                ],
+                stability_rating: 'good',
             },
             regulatory_approvals: new Map(),
             target_properties: [],
             creation_date: new Date(),
-            last_modified: new Date()
+            last_modified: new Date(),
         };
 
         // Select top ingredients from reduced search space
         const topIngredients = searchSpaceResult.reduced_search_space.slice(0, 8);
-        
+
         topIngredients.forEach(ingredient => {
             formulation.ingredients.push(ingredient);
             const concentration = searchSpaceResult.estimated_concentrations.get(ingredient.id) || 1.0;
@@ -481,7 +478,7 @@ export class MultiscaleOptimizer {
         searchSpaceResult: MultiscaleOptimizationResult,
         context: OptimizationContext,
         config: MultiscaleOptimizationConfig,
-        iteration: number
+        iteration: number,
     ): Promise<OptimizationStep> {
         const scoreBefore = this.evaluateFormulation(formulation, context);
         const constraintsBefore = this.countConstraintViolations(formulation, context);
@@ -492,7 +489,7 @@ export class MultiscaleOptimizer {
 
         // Decide on optimization action based on attention and exploration
         const random = Math.random();
-        
+
         if (random < config.exploration_probability) {
             // Global exploration
             if (Math.random() < 0.5) {
@@ -535,17 +532,14 @@ export class MultiscaleOptimizer {
             score_after: scoreAfter,
             constraints_before: constraintsBefore,
             constraints_after: constraintsAfter,
-            reasoning
+            reasoning,
         };
     }
 
     /**
      * Evaluate formulation quality score
      */
-    private evaluateFormulation(
-        formulation: CosmeticFormulation,
-        context: OptimizationContext
-    ): number {
+    private evaluateFormulation(formulation: CosmeticFormulation, context: OptimizationContext): number {
         let totalScore = 0;
         let weightSum = 0;
 
@@ -575,10 +569,7 @@ export class MultiscaleOptimizer {
     /**
      * Calculate therapeutic efficacy across skin layers
      */
-    private calculateTherapeuticEfficacy(
-        formulation: CosmeticFormulation,
-        context: OptimizationContext
-    ): number {
+    private calculateTherapeuticEfficacy(formulation: CosmeticFormulation, context: OptimizationContext): number {
         let totalEfficacy = 0;
         let actionCount = 0;
 
@@ -587,18 +578,15 @@ export class MultiscaleOptimizer {
             let contributingIngredients = 0;
 
             formulation.ingredients.forEach(ingredient => {
-                if (ingredient.therapeutic_vectors?.some(vector => 
-                    action.target_pathways.includes(vector) || 
-                    action.target_proteins.includes(vector))) {
-                    
+                if (
+                    ingredient.therapeutic_vectors?.some(
+                        vector => action.target_pathways.includes(vector) || action.target_proteins.includes(vector),
+                    )
+                ) {
                     const concentration = formulation.concentrations.get(ingredient.id) || 0;
-                    const penetrationFactor = this.calculatePenetrationFactor(
-                        ingredient, action.required_skin_layers
-                    );
-                    const doseResponse = this.calculateDoseResponse(
-                        concentration, action.concentration_response
-                    );
-                    
+                    const penetrationFactor = this.calculatePenetrationFactor(ingredient, action.required_skin_layers);
+                    const doseResponse = this.calculateDoseResponse(concentration, action.concentration_response);
+
                     actionEfficacy += doseResponse * penetrationFactor;
                     contributingIngredients++;
                 }
@@ -616,18 +604,17 @@ export class MultiscaleOptimizer {
     /**
      * Calculate penetration factor for ingredient across skin layers
      */
-    private calculatePenetrationFactor(
-        ingredient: CosmeticIngredient,
-        targetLayers: string[]
-    ): number {
+    private calculatePenetrationFactor(ingredient: CosmeticIngredient, targetLayers: string[]): number {
         let penetrationFactor = 1.0;
 
         targetLayers.forEach(layerName => {
             const layer = this.skinModel.get(layerName);
             if (layer) {
                 // Check molecular weight constraint
-                if (ingredient.molecularWeight && 
-                    ingredient.molecularWeight > layer.barrier_properties.molecular_weight_limit) {
+                if (
+                    ingredient.molecularWeight &&
+                    ingredient.molecularWeight > layer.barrier_properties.molecular_weight_limit
+                ) {
                     penetrationFactor *= 0.3; // Significant penalty
                 }
 
@@ -635,7 +622,7 @@ export class MultiscaleOptimizer {
                 if (ingredient.ph_stability_range) {
                     const phOverlap = this.calculateRangeOverlap(
                         ingredient.ph_stability_range,
-                        layer.barrier_properties.ph_tolerance
+                        layer.barrier_properties.ph_tolerance,
                     );
                     penetrationFactor *= phOverlap;
                 }
@@ -643,7 +630,7 @@ export class MultiscaleOptimizer {
                 // Check lipophilicity requirement
                 const solubilityScore = this.calculateSolubilityScore(
                     ingredient.solubility,
-                    layer.barrier_properties.lipophilicity_requirement
+                    layer.barrier_properties.lipophilicity_requirement,
                 );
                 penetrationFactor *= solubilityScore;
             }
@@ -657,45 +644,39 @@ export class MultiscaleOptimizer {
      */
     private calculateDoseResponse(
         concentration: number,
-        response: {ec50: number; hill_coefficient: number; max_effect: number}
+        response: {ec50: number; hill_coefficient: number; max_effect: number},
     ): number {
-        const hillEquation = (response.max_effect * Math.pow(concentration, response.hill_coefficient)) /
-                            (Math.pow(response.ec50, response.hill_coefficient) + 
-                             Math.pow(concentration, response.hill_coefficient));
-        
+        const hillEquation =
+            (response.max_effect * concentration ** response.hill_coefficient) /
+            (response.ec50 ** response.hill_coefficient + concentration ** response.hill_coefficient);
+
         return Math.min(1.0, hillEquation);
     }
 
     /**
      * Calculate range overlap between two ranges
      */
-    private calculateRangeOverlap(
-        range1: {min: number; max: number},
-        range2: {min: number; max: number}
-    ): number {
+    private calculateRangeOverlap(range1: {min: number; max: number}, range2: {min: number; max: number}): number {
         const overlapStart = Math.max(range1.min, range2.min);
         const overlapEnd = Math.min(range1.max, range2.max);
-        
+
         if (overlapStart >= overlapEnd) return 0;
-        
+
         const overlapSize = overlapEnd - overlapStart;
         const totalSize = Math.max(range1.max - range1.min, range2.max - range2.min);
-        
+
         return overlapSize / totalSize;
     }
 
     /**
      * Calculate solubility compatibility score
      */
-    private calculateSolubilityScore(
-        ingredientSolubility: string,
-        layerLipophilicity: number
-    ): number {
+    private calculateSolubilityScore(ingredientSolubility: string, layerLipophilicity: number): number {
         const solubilityScores = {
-            'water_soluble': 1 - layerLipophilicity,
-            'oil_soluble': layerLipophilicity,
-            'both': 0.9,
-            'insoluble': 0.2
+            water_soluble: 1 - layerLipophilicity,
+            oil_soluble: layerLipophilicity,
+            both: 0.9,
+            insoluble: 0.2,
         };
 
         return solubilityScores[ingredientSolubility as keyof typeof solubilityScores] || 0.5;
@@ -704,17 +685,14 @@ export class MultiscaleOptimizer {
     /**
      * Calculate constraint satisfaction score
      */
-    private calculateConstraintSatisfaction(
-        formulation: CosmeticFormulation,
-        context: OptimizationContext
-    ): number {
+    private calculateConstraintSatisfaction(formulation: CosmeticFormulation, context: OptimizationContext): number {
         let totalSatisfaction = 0;
         let totalWeight = 0;
 
         this.optimizationConstraints.forEach(constraint => {
             const evaluation = constraint.evaluation_function(formulation, context);
             const weight = constraint.priority * (constraint.hard_constraint ? 2 : 1);
-            
+
             totalSatisfaction += evaluation.satisfaction_degree * weight;
             totalWeight += weight;
         });
@@ -733,7 +711,7 @@ export class MultiscaleOptimizer {
             for (let j = i + 1; j < formulation.ingredients.length; j++) {
                 const ing1 = formulation.ingredients[i];
                 const ing2 = formulation.ingredients[j];
-                
+
                 const synergy = this.calculatePairwiseSynergy(ing1, ing2);
                 totalSynergy += synergy;
                 pairCount++;
@@ -753,17 +731,15 @@ export class MultiscaleOptimizer {
         this.therapeuticActions.forEach(action => {
             const synergy1 = action.synergy_potential.get(ing1.id) || 0;
             const synergy2 = action.synergy_potential.get(ing2.id) || 0;
-            
+
             if (synergy1 > 0 && synergy2 > 0) {
-                synergy += (synergy1 + synergy2) / 2 * 0.5;
+                synergy += ((synergy1 + synergy2) / 2) * 0.5;
             }
         });
 
         // Check for shared therapeutic vectors
-        const sharedVectors = ing1.therapeutic_vectors?.filter(v =>
-            ing2.therapeutic_vectors?.includes(v)
-        ) || [];
-        
+        const sharedVectors = ing1.therapeutic_vectors?.filter(v => ing2.therapeutic_vectors?.includes(v)) || [];
+
         synergy += sharedVectors.length * 0.1;
 
         // Check for complementary mechanisms
@@ -783,25 +759,23 @@ export class MultiscaleOptimizer {
             ['HUMECTANT', 'EMOLLIENT'],
             ['ACTIVE_INGREDIENT', 'PRESERVATIVE'],
             ['ANTIOXIDANT', 'UV_FILTER'],
-            ['VITAMIN', 'PEPTIDE']
+            ['VITAMIN', 'PEPTIDE'],
         ];
 
-        return complementaryPairs.some(([type1, type2]) =>
-            (ing1.subtype === type1 && ing2.subtype === type2) ||
-            (ing1.subtype === type2 && ing2.subtype === type1)
+        return complementaryPairs.some(
+            ([type1, type2]) =>
+                (ing1.subtype === type1 && ing2.subtype === type2) ||
+                (ing1.subtype === type2 && ing2.subtype === type1),
         );
     }
 
     /**
      * Calculate cost-effectiveness score
      */
-    private calculateCostEffectiveness(
-        formulation: CosmeticFormulation,
-        context: OptimizationContext
-    ): number {
+    private calculateCostEffectiveness(formulation: CosmeticFormulation, context: OptimizationContext): number {
         const totalCost = formulation.total_cost;
         const maxBudget = context.budget_constraints.max;
-        
+
         if (totalCost > maxBudget) {
             return 0; // Over budget
         }
@@ -813,11 +787,10 @@ export class MultiscaleOptimizer {
     // Constraint evaluation functions
     private evaluateTotalActivesConstraint(
         formulation: CosmeticFormulation,
-        context: OptimizationContext
+        context: OptimizationContext,
     ): ConstraintEvaluation {
-        const totalActives = Array.from(formulation.concentrations.values())
-            .reduce((sum, conc) => sum + conc, 0);
-        
+        const totalActives = Array.from(formulation.concentrations.values()).reduce((sum, conc) => sum + conc, 0);
+
         const maxAllowed = 25.0; // Maximum total actives percentage
         const satisfied = totalActives <= maxAllowed;
         const satisfactionDegree = satisfied ? 1.0 : maxAllowed / totalActives;
@@ -827,23 +800,25 @@ export class MultiscaleOptimizer {
             satisfied,
             satisfaction_degree: satisfactionDegree,
             violation_magnitude: violationMagnitude,
-            corrective_suggestions: satisfied ? [] : ['Reduce ingredient concentrations', 'Remove least effective ingredients']
+            corrective_suggestions: satisfied
+                ? []
+                : ['Reduce ingredient concentrations', 'Remove least effective ingredients'],
         };
     }
 
     private evaluateCompatibilityConstraint(
         formulation: CosmeticFormulation,
-        context: OptimizationContext
+        context: OptimizationContext,
     ): ConstraintEvaluation {
         let incompatiblePairs = 0;
-        const totalPairs = formulation.ingredients.length * (formulation.ingredients.length - 1) / 2;
+        const totalPairs = (formulation.ingredients.length * (formulation.ingredients.length - 1)) / 2;
 
         // Simple compatibility check (would be more sophisticated in practice)
         for (let i = 0; i < formulation.ingredients.length; i++) {
             for (let j = i + 1; j < formulation.ingredients.length; j++) {
                 const ing1 = formulation.ingredients[i];
                 const ing2 = formulation.ingredients[j];
-                
+
                 if (this.areIngredientsIncompatible(ing1, ing2)) {
                     incompatiblePairs++;
                 }
@@ -851,50 +826,50 @@ export class MultiscaleOptimizer {
         }
 
         const satisfied = incompatiblePairs === 0;
-        const satisfactionDegree = totalPairs > 0 ? 1 - (incompatiblePairs / totalPairs) : 1;
+        const satisfactionDegree = totalPairs > 0 ? 1 - incompatiblePairs / totalPairs : 1;
 
         return {
             satisfied,
             satisfaction_degree: satisfactionDegree,
             violation_magnitude: incompatiblePairs,
-            corrective_suggestions: satisfied ? [] : ['Separate incompatible ingredients', 'Use stabilizing agents']
+            corrective_suggestions: satisfied ? [] : ['Separate incompatible ingredients', 'Use stabilizing agents'],
         };
     }
 
     private evaluateRegulatoryConstraint(
         formulation: CosmeticFormulation,
-        context: OptimizationContext
+        context: OptimizationContext,
     ): ConstraintEvaluation {
         let compliantIngredients = 0;
-        
+
         formulation.ingredients.forEach(ingredient => {
             const isCompliant = context.regulatory_regions.every(region => {
                 const status = ingredient.regulatory_status?.get(region);
                 return status === 'approved';
             });
-            
+
             if (isCompliant) compliantIngredients++;
         });
 
         const satisfied = compliantIngredients === formulation.ingredients.length;
-        const satisfactionDegree = formulation.ingredients.length > 0 ? 
-            compliantIngredients / formulation.ingredients.length : 1;
+        const satisfactionDegree =
+            formulation.ingredients.length > 0 ? compliantIngredients / formulation.ingredients.length : 1;
 
         return {
             satisfied,
             satisfaction_degree: satisfactionDegree,
             violation_magnitude: formulation.ingredients.length - compliantIngredients,
-            corrective_suggestions: satisfied ? [] : ['Replace non-compliant ingredients', 'Seek regulatory approval']
+            corrective_suggestions: satisfied ? [] : ['Replace non-compliant ingredients', 'Seek regulatory approval'],
         };
     }
 
     private evaluateCostConstraint(
         formulation: CosmeticFormulation,
-        context: OptimizationContext
+        context: OptimizationContext,
     ): ConstraintEvaluation {
         const totalCost = formulation.total_cost;
         const maxBudget = context.budget_constraints.max;
-        
+
         const satisfied = totalCost <= maxBudget;
         const satisfactionDegree = satisfied ? 1.0 : maxBudget / totalCost;
         const violationMagnitude = Math.max(0, totalCost - maxBudget);
@@ -903,22 +878,26 @@ export class MultiscaleOptimizer {
             satisfied,
             satisfaction_degree: satisfactionDegree,
             violation_magnitude: violationMagnitude,
-            corrective_suggestions: satisfied ? [] : ['Reduce ingredient quantities', 'Find cost-effective alternatives']
+            corrective_suggestions: satisfied
+                ? []
+                : ['Reduce ingredient quantities', 'Find cost-effective alternatives'],
         };
     }
 
     private evaluateSynergyConstraint(
         formulation: CosmeticFormulation,
-        context: OptimizationContext
+        context: OptimizationContext,
     ): ConstraintEvaluation {
         const synergyScore = this.calculateSynergyScore(formulation);
         const satisfied = synergyScore >= 0.6; // Threshold for good synergy
-        
+
         return {
             satisfied,
             satisfaction_degree: synergyScore,
             violation_magnitude: Math.max(0, 0.6 - synergyScore),
-            corrective_suggestions: satisfied ? [] : ['Add synergistic ingredient combinations', 'Remove antagonistic ingredients']
+            corrective_suggestions: satisfied
+                ? []
+                : ['Add synergistic ingredient combinations', 'Remove antagonistic ingredients'],
         };
     }
 
@@ -928,21 +907,17 @@ export class MultiscaleOptimizer {
         const knownIncompatibilities = [
             ['retinol', 'vitamin_c'],
             ['benzoyl_peroxide', 'retinol'],
-            ['aha', 'bha']
+            ['aha', 'bha'],
         ];
 
-        return knownIncompatibilities.some(([id1, id2]) =>
-            (ing1.id === id1 && ing2.id === id2) ||
-            (ing1.id === id2 && ing2.id === id1)
+        return knownIncompatibilities.some(
+            ([id1, id2]) => (ing1.id === id1 && ing2.id === id2) || (ing1.id === id2 && ing2.id === id1),
         );
     }
 
-    private countConstraintViolations(
-        formulation: CosmeticFormulation,
-        context: OptimizationContext
-    ): number {
+    private countConstraintViolations(formulation: CosmeticFormulation, context: OptimizationContext): number {
         let violations = 0;
-        
+
         this.optimizationConstraints.forEach(constraint => {
             const evaluation = constraint.evaluation_function(formulation, context);
             if (!evaluation.satisfied) violations++;
@@ -954,11 +929,11 @@ export class MultiscaleOptimizer {
     private selectIngredientToAdd(
         formulation: CosmeticFormulation,
         searchSpaceResult: MultiscaleOptimizationResult,
-        context: OptimizationContext
+        context: OptimizationContext,
     ): any {
         // Select ingredient not currently in formulation
-        const availableIngredients = searchSpaceResult.reduced_search_space.filter(ing =>
-            !formulation.ingredients.find(existing => existing.id === ing.id)
+        const availableIngredients = searchSpaceResult.reduced_search_space.filter(
+            ing => !formulation.ingredients.find(existing => existing.id === ing.id),
         );
 
         if (availableIngredients.length === 0) return null;
@@ -969,7 +944,7 @@ export class MultiscaleOptimizer {
             formulation.ingredients.forEach(existing => {
                 synergyScore += this.calculatePairwiseSynergy(ingredient, existing);
             });
-            
+
             return {ingredient, score: synergyScore / formulation.ingredients.length};
         });
 
@@ -977,10 +952,7 @@ export class MultiscaleOptimizer {
         return {ingredient: scoredIngredients[0].ingredient, concentration: 1.0};
     }
 
-    private selectIngredientToRemove(
-        formulation: CosmeticFormulation,
-        context: OptimizationContext
-    ): any {
+    private selectIngredientToRemove(formulation: CosmeticFormulation, context: OptimizationContext): any {
         if (formulation.ingredients.length <= 3) return null; // Keep minimum ingredients
 
         // Score ingredients by their contribution (lower score = remove first)
@@ -988,7 +960,7 @@ export class MultiscaleOptimizer {
             const efficacyContribution = this.calculateIngredientEfficacyContribution(ingredient, formulation);
             const synergyContribution = this.calculateIngredientSynergyContribution(ingredient, formulation);
             const cost = (ingredient.cost_per_gram || 0.1) * (formulation.concentrations.get(ingredient.id) || 1);
-            
+
             const score = (efficacyContribution + synergyContribution) / cost;
             return {ingredient, score};
         });
@@ -999,22 +971,17 @@ export class MultiscaleOptimizer {
 
     private calculateIngredientEfficacyContribution(
         ingredient: CosmeticIngredient,
-        formulation: CosmeticFormulation
+        formulation: CosmeticFormulation,
     ): number {
         // Calculate how much this ingredient contributes to overall efficacy
         let contribution = 0;
-        
+
         this.therapeuticActions.forEach(action => {
-            if (ingredient.therapeutic_vectors?.some(vector => 
-                action.target_pathways.includes(vector))) {
+            if (ingredient.therapeutic_vectors?.some(vector => action.target_pathways.includes(vector))) {
                 const concentration = formulation.concentrations.get(ingredient.id) || 0;
-                const penetrationFactor = this.calculatePenetrationFactor(
-                    ingredient, action.required_skin_layers
-                );
-                const doseResponse = this.calculateDoseResponse(
-                    concentration, action.concentration_response
-                );
-                
+                const penetrationFactor = this.calculatePenetrationFactor(ingredient, action.required_skin_layers);
+                const doseResponse = this.calculateDoseResponse(concentration, action.concentration_response);
+
                 contribution += doseResponse * penetrationFactor;
             }
         });
@@ -1024,36 +991,32 @@ export class MultiscaleOptimizer {
 
     private calculateIngredientSynergyContribution(
         ingredient: CosmeticIngredient,
-        formulation: CosmeticFormulation
+        formulation: CosmeticFormulation,
     ): number {
         let synergyContribution = 0;
-        
+
         formulation.ingredients.forEach(other => {
             if (other.id !== ingredient.id) {
                 synergyContribution += this.calculatePairwiseSynergy(ingredient, other);
             }
         });
 
-        return formulation.ingredients.length > 1 ? 
-            synergyContribution / (formulation.ingredients.length - 1) : 0;
+        return formulation.ingredients.length > 1 ? synergyContribution / (formulation.ingredients.length - 1) : 0;
     }
 
-    private optimizeConcentrations(
-        formulation: CosmeticFormulation,
-        context: OptimizationContext
-    ): any {
+    private optimizeConcentrations(formulation: CosmeticFormulation, context: OptimizationContext): any {
         // Simple concentration adjustment
         const adjustments = new Map<string, number>();
-        
+
         formulation.ingredients.forEach(ingredient => {
             const currentConc = formulation.concentrations.get(ingredient.id) || 1;
             const maxConc = ingredient.concentration_range?.max || 10;
             const minConc = ingredient.concentration_range?.min || 0.1;
-            
+
             // Small random adjustment within constraints
             const adjustment = (Math.random() - 0.5) * 0.2 * currentConc;
             const newConc = Math.max(minConc, Math.min(maxConc, currentConc + adjustment));
-            
+
             adjustments.set(ingredient.id, newConc);
             formulation.concentrations.set(ingredient.id, newConc);
         });
@@ -1061,10 +1024,7 @@ export class MultiscaleOptimizer {
         return {adjustments};
     }
 
-    private performLocalSearch(
-        formulation: CosmeticFormulation,
-        context: OptimizationContext
-    ): any {
+    private performLocalSearch(formulation: CosmeticFormulation, context: OptimizationContext): any {
         // Implement local search heuristics
         return {action: 'local_optimization'};
     }
@@ -1072,7 +1032,7 @@ export class MultiscaleOptimizer {
     private performGlobalJump(
         formulation: CosmeticFormulation,
         searchSpaceResult: MultiscaleOptimizationResult,
-        context: OptimizationContext
+        context: OptimizationContext,
     ): any {
         // Implement global jump strategy
         return {action: 'global_exploration'};
@@ -1080,15 +1040,16 @@ export class MultiscaleOptimizer {
 
     private applyOptimizationAction(
         formulation: CosmeticFormulation,
-        action: OptimizationStep['action'], 
-        parameters: any
+        action: OptimizationStep['action'],
+        parameters: any,
     ): void {
         switch (action) {
             case 'add_ingredient':
                 if (parameters?.ingredient) {
                     formulation.ingredients.push(parameters.ingredient);
                     formulation.concentrations.set(parameters.ingredient.id, parameters.concentration || 1.0);
-                    formulation.total_cost += (parameters.ingredient.cost_per_gram || 0.1) * (parameters.concentration || 1.0);
+                    formulation.total_cost +=
+                        (parameters.ingredient.cost_per_gram || 0.1) * (parameters.concentration || 1.0);
                 }
                 break;
             case 'remove_ingredient':
@@ -1107,7 +1068,7 @@ export class MultiscaleOptimizer {
                     parameters.adjustments.forEach((newConc: number, ingredientId: string) => {
                         const oldConc = formulation.concentrations.get(ingredientId) || 0;
                         formulation.concentrations.set(ingredientId, newConc);
-                        
+
                         const ingredient = formulation.ingredients.find(ing => ing.id === ingredientId);
                         if (ingredient) {
                             formulation.total_cost += (ingredient.cost_per_gram || 0.1) * (newConc - oldConc);
@@ -1120,10 +1081,7 @@ export class MultiscaleOptimizer {
         formulation.last_modified = new Date();
     }
 
-    private checkConvergence(
-        trace: OptimizationStep[],
-        threshold: number
-    ): boolean {
+    private checkConvergence(trace: OptimizationStep[], threshold: number): boolean {
         if (trace.length < 10) return false;
 
         const recentSteps = trace.slice(-10);
@@ -1139,7 +1097,7 @@ export class MultiscaleOptimizer {
             ingredients: [...formulation.ingredients],
             concentrations: new Map(formulation.concentrations),
             regulatory_approvals: new Map(formulation.regulatory_approvals),
-            target_properties: [...formulation.target_properties]
+            target_properties: [...formulation.target_properties],
         };
     }
 
@@ -1147,11 +1105,11 @@ export class MultiscaleOptimizer {
         formulation: CosmeticFormulation,
         context: OptimizationContext,
         trace: OptimizationStep[],
-        iterations: number
+        iterations: number,
     ): Promise<OptimizationResult> {
         const finalScore = this.evaluateFormulation(formulation, context);
         const constraintSatisfaction = new Map<string, ConstraintEvaluation>();
-        
+
         this.optimizationConstraints.forEach((constraint, id) => {
             constraintSatisfaction.set(id, constraint.evaluation_function(formulation, context));
         });
@@ -1174,9 +1132,9 @@ export class MultiscaleOptimizer {
 
         const regulatoryCompliance = new Map<string, number>();
         context.regulatory_regions.forEach(region => {
-            const compliance = formulation.ingredients.filter(ing =>
-                ing.regulatory_status?.get(region) === 'approved'
-            ).length / formulation.ingredients.length;
+            const compliance =
+                formulation.ingredients.filter(ing => ing.regulatory_status?.get(region) === 'approved').length /
+                formulation.ingredients.length;
             regulatoryCompliance.set(region, compliance);
         });
 
@@ -1193,8 +1151,8 @@ export class MultiscaleOptimizer {
             convergence_metrics: {
                 iterations_to_convergence: iterations,
                 final_score: finalScore,
-                constraint_violations: this.countConstraintViolations(formulation, context)
-            }
+                constraint_violations: this.countConstraintViolations(formulation, context),
+            },
         };
     }
 }

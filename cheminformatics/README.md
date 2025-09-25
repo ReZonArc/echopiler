@@ -6,6 +6,8 @@ This directory contains the implementation of a comprehensive cosmetic chemistry
 
 The cosmetic chemistry framework provides specialized atom types, formulation modeling, and ingredient analysis capabilities specifically designed for cosmetic product development and analysis.
 
+**NEW: Meta-Optimization Engine** - A comprehensive strategy for generating optimal formulations for every possible condition and treatment combination.
+
 ## Structure
 
 ```
@@ -143,6 +145,34 @@ optimized = framework.optimize_formulation(
   (check-compatibility vitamin-c retinol))
 ```
 
+### Meta-Optimization Strategy (TypeScript) - **NEW**
+```typescript
+import { MetaOptimizationEngine } from '../lib/cheminformatics/meta-optimization-engine.js';
+
+// Initialize meta-optimization engine
+const metaEngine = new MetaOptimizationEngine({
+    max_combinations: 100,
+    enable_caching: true,
+    performance_tracking: true
+});
+
+// Get comprehensive condition-treatment matrix
+const matrix = metaEngine.getConditionTreatmentMatrix();
+console.log(`Generated ${matrix.combinations.length} combinations`);
+
+// Optimize for specific combination
+const result = await metaEngine.optimizeForCombination(
+    'combo_0', // Anti-aging combination
+    'mature',  // Skin type
+    { budget_limit: 150 }
+);
+
+// Run comprehensive optimization for all combinations
+const summary = await metaEngine.optimizeAllCombinations('normal');
+console.log(`Optimized ${summary.successful_optimizations} formulations`);
+console.log(`Best score: ${summary.performance_analytics.best_overall_score}`);
+```
+
 ## Practical Applications
 
 1. **Formulation Development**
@@ -164,6 +194,12 @@ optimized = framework.optimize_formulation(
    - Alternative ingredient identification
    - Property-matched replacements
    - Cost and regulatory impact analysis
+
+5. **Meta-Optimization Strategy (NEW)**
+   - Automatic condition-treatment matrix generation (112+ combinations)
+   - Intelligent optimization strategy selection based on complexity
+   - Performance analytics and result caching
+   - Contextual recommendations for each formulation
 
 ## Technical Implementation
 
@@ -193,6 +229,9 @@ The framework includes comprehensive tests covering:
 
 ```bash
 npm run test -- --run test/cheminformatics/cosmetic-chemistry-tests.ts
+npm run test -- --run test/cheminformatics/hypergredient-framework-tests.ts  
+npm run test -- --run test/cheminformatics/multiscale-optimization-tests.ts
+npm run test -- --run test/cheminformatics/meta-optimization-tests.ts  # NEW
 ```
 
 ## Future Enhancements
